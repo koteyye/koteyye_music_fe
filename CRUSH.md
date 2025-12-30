@@ -2,7 +2,8 @@
 
 ## Build/Lint/Test Commands
 - **Dev server**: `npm run dev` (runs on port 3000 with API proxy)
-- **Build**: `npm run build` (includes TypeScript compilation via vue-tsc)
+- **Build**: `npm run build` (production build without type checking)
+- **Build with types**: `npm run build:check` (includes TypeScript compilation via vue-tsc)
 - **Preview**: `npm run preview`
 - **Type check**: `vue-tsc --noEmit`
 
