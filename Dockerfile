@@ -9,8 +9,8 @@ WORKDIR /app
 # Копируем файлы зависимостей
 COPY package*.json ./
 
-# Устанавливаем зависимости
-RUN npm ci --only=production
+# Устанавливаем все зависимости (включая dev для сборки)
+RUN npm ci
 
 # Копируем исходный код
 COPY . .
