@@ -142,7 +142,10 @@ export const tracksAPI = {
   },
 
   getStreamUrl: (trackId: string): string => {
-    return `${API_BASE_URL}/api/tracks/${trackId}/stream`;
+    // Сначала пробуем новый endpoint, fallback на старый
+    const newUrl = `${API_BASE_URL}/api/tracks/${trackId}/stream`;
+    console.log('Generated stream URL:', newUrl);
+    return newUrl;
   },
 
   getCoverUrl: (trackId: string): string => {
@@ -150,7 +153,18 @@ export const tracksAPI = {
       console.error('getCoverUrl: Invalid trackId:', trackId, typeof trackId);
       return `${API_BASE_URL}/api/tracks/invalid/cover`;
     }
-    return `${API_BASE_URL}/api/tracks/${trackId}/cover`;
+    const newUrl = `${API_BASE_URL}/api/tracks/${trackId}/cover`;
+    console.log('Generated cover URL:', newUrl);
+    return newUrl;
+  },
+
+  // Fallback методы для старых endpoints
+  getLegacyStreamUrl: (trackId: string): string => {
+    return `${API_BASE_URL}/tracks/${trackId}/stream`;
+  },
+
+  getLegacyCoverUrl: (trackId: string): string => {
+    return `${API_BASE_URL}/tracks/${trackId}/cover`;
   },
 
   // Проверка существования обложки
@@ -278,7 +292,7 @@ export const userAPI = {
   },
 
   savePlayerState: async (playerState: Omit<PlayerState, 'updated_at'>): Promise<void> => {
-    await apiClient.post("/user/player-state", playerState);
+    await apiClient.post("/users/player-state", playerState);
   },
 };
 

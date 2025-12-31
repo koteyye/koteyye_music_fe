@@ -142,7 +142,21 @@ export const usePlayerStore = defineStore('player', () => {
     }
 
     if (audio) {
-      audio.src = tracksAPI.getStreamUrl(track.id);
+      const streamUrl = tracksAPI.getStreamUrl(track.id);
+      console.log('Setting audio source to:', streamUrl);
+      audio.src = streamUrl;
+      
+      // Добавляем обработчик ошибки загрузки аудио
+      const handleAudioError = () => {
+        console.warn('Failed to load audio from new endpoint, trying legacy endpoint');
+        const legacyUrl = tracksAPI.getLegacyStreamUrl(track.id);
+        console.log('Trying legacy URL:', legacyUrl);
+        audio.src = legacyUrl;
+        audio.removeEventListener('error', handleAudioError);
+      };
+      
+      audio.addEventListener('error', handleAudioError, { once: true });
+      
       audio.play()
         .then(() => {
           isPlaying.value = true;
@@ -150,6 +164,7 @@ export const usePlayerStore = defineStore('player', () => {
         })
         .catch((error) => {
           console.error('Failed to play track:', error);
+          console.error('Stream URL was:', streamUrl);
           isPlaying.value = false;
         });
     }
