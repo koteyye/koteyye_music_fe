@@ -173,7 +173,7 @@
           </div>
 
           <!-- Tablet/Desktop Layout -->
-          <div class="hidden md:flex flex-col xl:flex-row gap-6 lg:gap-8 max-w-6xl mx-auto px-6 pb-6 h-full">
+          <div class="hidden md:flex flex-col xl:flex-row gap-6 lg:gap-8 max-w-6xl mx-auto px-6 pb-6 flex-1" style="background-color: rgba(0,0,255,0.1); border: 2px solid blue;">
             <!-- Left Column: Cover & Stats (адаптивные размеры) -->
             <div class="w-full xl:w-96 flex-shrink-0 flex flex-col justify-center">
               <!-- Большая обложка -->
@@ -230,7 +230,7 @@
             </div>
 
             <!-- Right Column: Track Info & Controls -->
-            <div class="flex-1 flex flex-col justify-center xl:justify-between min-h-0 xl:min-h-[400px]">
+            <div class="flex-1 flex flex-col justify-between min-h-0 xl:min-h-[400px]" style="background-color: rgba(0,255,0,0.1); border: 2px solid green;">
               <!-- Track Info -->
               <div class="text-center xl:text-left mb-6 xl:mb-0">
                 <h1 class="text-2xl md:text-3xl xl:text-4xl font-bold mb-3 text-white leading-tight">{{ currentTrack.title }}</h1>
@@ -273,7 +273,7 @@
               </div>
 
               <!-- Tablet/Desktop Controls -->
-              <div class="flex items-center justify-center gap-6 lg:gap-8">
+              <div class="flex items-center justify-center gap-6 lg:gap-8" style="background-color: rgba(255,0,0,0.1); border: 2px solid red;">
                 <button 
                   @click="playerStore.toggleShuffle"
                   class="flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-full transition-colors"
