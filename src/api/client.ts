@@ -142,8 +142,8 @@ export const tracksAPI = {
   },
 
   getStreamUrl: (trackId: string): string => {
-    // Сначала пробуем новый endpoint, fallback на старый
-    const newUrl = `${API_BASE_URL}/api/tracks/${trackId}/stream`;
+    // API_BASE_URL уже содержит /api, поэтому убираем дублирование
+    const newUrl = `${API_BASE_URL}/tracks/${trackId}/stream`;
     console.log('Generated stream URL:', newUrl);
     return newUrl;
   },
@@ -151,35 +151,42 @@ export const tracksAPI = {
   getCoverUrl: (trackId: string): string => {
     if (!trackId || typeof trackId !== 'string') {
       console.error('getCoverUrl: Invalid trackId:', trackId, typeof trackId);
-      return `${API_BASE_URL}/api/tracks/invalid/cover`;
+      return `${API_BASE_URL}/tracks/invalid/cover`;
     }
-    const newUrl = `${API_BASE_URL}/api/tracks/${trackId}/cover`;
+    const newUrl = `${API_BASE_URL}/tracks/${trackId}/cover`;
     console.log('Generated cover URL:', newUrl);
     return newUrl;
   },
 
-  // Fallback методы для старых endpoints
+  // Fallback методы для старых endpoints (без /api префикса)
   getLegacyStreamUrl: (trackId: string): string => {
-    return `${API_BASE_URL}/tracks/${trackId}/stream`;
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    return `${baseUrl}/tracks/${trackId}/stream`;
   },
 
   getLegacyCoverUrl: (trackId: string): string => {
-    return `${API_BASE_URL}/tracks/${trackId}/cover`;
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    return `${baseUrl}/tracks/${trackId}/cover`;
   },
 
   // Диагностическая функция для проверки endpoints
   checkEndpoints: async (trackId: string): Promise<void> => {
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
     const endpoints = [
-      { name: 'New Stream', url: `${API_BASE_URL}/api/tracks/${trackId}/stream` },
-      { name: 'Legacy Stream', url: `${API_BASE_URL}/tracks/${trackId}/stream` },
-      { name: 'New Cover', url: `${API_BASE_URL}/api/tracks/${trackId}/cover` },
-      { name: 'Legacy Cover', url: `${API_BASE_URL}/tracks/${trackId}/cover` }
+      { name: 'API Stream', url: `${API_BASE_URL}/tracks/${trackId}/stream` },
+      { name: 'Legacy Stream', url: `${baseUrl}/tracks/${trackId}/stream` },
+      { name: 'API Cover', url: `${API_BASE_URL}/tracks/${trackId}/cover` },
+      { name: 'Legacy Cover', url: `${baseUrl}/tracks/${trackId}/cover` }
     ];
 
     console.log('=== Endpoint Diagnostics ===');
+    console.log('API_BASE_URL:', API_BASE_URL);
+    console.log('baseUrl:', baseUrl);
+    
     for (const endpoint of endpoints) {
       try {
-        const response = await fetch(endpoint.url, { method: 'HEAD' });
+        // Используем GET вместо HEAD, так как HEAD может не поддерживаться
+        const response = await fetch(endpoint.url);
         console.log(`${endpoint.name}: ${response.status} ${response.statusText} - ${endpoint.url}`);
       } catch (error) {
         console.error(`${endpoint.name}: ERROR - ${endpoint.url}`, error);
@@ -191,7 +198,7 @@ export const tracksAPI = {
   // Проверка существования обложки
   checkCoverExists: async (trackId: string): Promise<boolean> => {
     try {
-      const response = await apiClient.head(`/api/tracks/${trackId}/cover`);
+      const response = await apiClient.head(`/tracks/${trackId}/cover`);
       return response.status === 200;
     } catch {
       return false;

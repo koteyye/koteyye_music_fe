@@ -146,12 +146,12 @@ export const usePlayerStore = defineStore('player', () => {
       console.log('Setting audio source to:', streamUrl);
       
       // Сначала проверим доступность URL через fetch
-      fetch(streamUrl, { method: 'HEAD' })
+      fetch(streamUrl)
         .then(response => {
           console.log('Stream URL response:', response.status, response.statusText);
           if (!response.ok) {
             console.warn('Stream URL not accessible, trying legacy endpoint');
-            return fetch(tracksAPI.getLegacyStreamUrl(track.id), { method: 'HEAD' });
+            return fetch(tracksAPI.getLegacyStreamUrl(track.id));
           }
           return response;
         })
