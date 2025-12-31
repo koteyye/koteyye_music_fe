@@ -20,9 +20,10 @@
         <!-- Album Cover -->
         <div class="relative aspect-square rounded-xl overflow-hidden mb-3 shadow-lg group-hover:shadow-xl transition-shadow">
           <img
-            :src="album.cover_url || '/default-cover.jpg'"
+            :src="getAlbumCover(album)"
             :alt="album.title"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            @error="handleImageError"
           />
           
           <!-- Genre Badge -->
@@ -88,6 +89,7 @@ import { useRouter } from 'vue-router'
 import { usePlayerStore } from '../stores/player'
 import { tracksAPI } from '../api/client'
 import { getGenreDisplayName } from '../constants/genres'
+import { buildMediaUrl } from '../utils/media-urls'
 import { Play, Cat } from 'lucide-vue-next'
 import type { Album } from '../types'
 
@@ -130,6 +132,17 @@ const getTrackWordEnding = (count: number): string => {
   if (count % 10 === 1 && count % 100 !== 11) return ''
   if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) return 'а'
   return 'ов'
+}
+
+const getAlbumCover = (album: Album): string => {
+  return buildMediaUrl(album.cover_url) || '/default-cover.jpg'
+}
+
+const handleImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement
+  if (img.src !== '/default-cover.jpg') {
+    img.src = '/default-cover.jpg'
+  }
 }
 
 // Actions

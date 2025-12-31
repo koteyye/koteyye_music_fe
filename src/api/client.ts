@@ -142,21 +142,21 @@ export const tracksAPI = {
   },
 
   getStreamUrl: (trackId: string): string => {
-    return `${API_BASE_URL}/tracks/${trackId}/stream`;
+    return `${API_BASE_URL}/api/tracks/${trackId}/stream`;
   },
 
   getCoverUrl: (trackId: string): string => {
     if (!trackId || typeof trackId !== 'string') {
       console.error('getCoverUrl: Invalid trackId:', trackId, typeof trackId);
-      return `${API_BASE_URL}/tracks/invalid/cover`;
+      return `${API_BASE_URL}/api/tracks/invalid/cover`;
     }
-    return `${API_BASE_URL}/tracks/${trackId}/cover`;
+    return `${API_BASE_URL}/api/tracks/${trackId}/cover`;
   },
 
   // Проверка существования обложки
   checkCoverExists: async (trackId: string): Promise<boolean> => {
     try {
-      const response = await apiClient.head(`/tracks/${trackId}/cover`);
+      const response = await apiClient.head(`/api/tracks/${trackId}/cover`);
       return response.status === 200;
     } catch {
       return false;

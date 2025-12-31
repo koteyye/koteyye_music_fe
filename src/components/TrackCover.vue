@@ -61,6 +61,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { Music, Play } from 'lucide-vue-next'
 import { tracksAPI } from '../api/client'
+import { buildMediaUrl } from '../utils/media-urls'
 import type { Track } from '../types'
 
 interface Props {
@@ -103,12 +104,17 @@ const hasTrackCover = computed(() => {
 const coverUrl = computed(() => {
   if (!hasTrackCover.value) return null
   
-  // Если есть cover_url - используем его напрямую
+  // Если есть cover_url - используем его через buildMediaUrl
   if (props.track.cover_url && props.track.cover_url.trim() !== '') {
-    return props.track.cover_url
+    const baseUrl = buildMediaUrl(props.track.cover_url)
+    if (!baseUrl) return null
+    
+    // Добавляем параметр для retry
+    const timestamp = retryCount.value > 0 ? `?v=${Date.now()}` : ''
+    return baseUrl + timestamp
   }
   
-  // Иначе используем старый способ через API
+  // Fallback - используем старый способ через API
   const trackId = props.track.id
   if (!trackId || typeof trackId !== 'string') {
     console.error('TrackCover: Invalid track ID:', trackId, 'Track:', props.track)

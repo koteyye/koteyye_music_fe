@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { usePlayerStore } from "../stores/player";
 import { tracksAPI } from "../api/client";
+import { buildMediaUrl } from "../utils/media-urls";
 import { getGenreDisplayName } from "../constants/genres";
 import { Play, Pause, Cat, Clock, Music } from "lucide-vue-next";
 import TrackCover from "./TrackCover.vue";
@@ -25,9 +26,20 @@ const error = ref<string | null>(null);
 // Предварительная загрузка обложек для видимых треков
 const preloadTrackCovers = (tracks: Track[]) => {
     tracks.slice(0, 10).forEach(track => {
-        if (track.s3_image_key && track.s3_image_key.trim() !== '') {
+        // Проверяем наличие обложки (либо через cover_url, либо через s3_image_key)
+        const hasCover = (track.cover_url && track.cover_url.trim() !== '') || 
+                        (track.s3_image_key && track.s3_image_key.trim() !== '');
+        
+        if (hasCover) {
             const img = new Image();
-            img.src = tracksAPI.getCoverUrl(track.id);
+            if (track.cover_url) {
+                // Используем новый buildMediaUrl для обработки cover_url
+                const coverUrl = buildMediaUrl(track.cover_url);
+                if (coverUrl) img.src = coverUrl;
+            } else {
+                // Fallback на старый метод
+                img.src = tracksAPI.getCoverUrl(track.id);
+            }
         }
     });
 };

@@ -45,3 +45,8 @@
 - Custom colors: `cream`, `kot-orange`, `kot-dark`
 - Responsive design with mobile-first approach
 - Use `group` classes for hover effects
+
+### Media URLs
+- Use `buildMediaUrl()` from `@/utils/media-urls` for all media resources
+- All media goes through backend endpoints: `/api/tracks/{id}/cover`, `/api/tracks/{id}/stream`, `/api/albums/{id}/cover`
+- No direct MinIO URLs in production
