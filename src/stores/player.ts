@@ -142,53 +142,15 @@ export const usePlayerStore = defineStore('player', () => {
     }
 
     if (audio) {
-      const streamUrl = tracksAPI.getStreamUrl(track.id);
-      console.log('Setting audio source to:', streamUrl);
-      
-      // Сначала проверим доступность URL через fetch
-      fetch(streamUrl)
-        .then(response => {
-          console.log('Stream URL response:', response.status, response.statusText);
-          if (!response.ok) {
-            console.warn('Stream URL not accessible, trying legacy endpoint');
-            return fetch(tracksAPI.getLegacyStreamUrl(track.id));
-          }
-          return response;
-        })
-        .then(response => {
-          if (response && !response.ok) {
-            console.warn('Legacy URL also not accessible:', response.status);
-            const legacyUrl = tracksAPI.getLegacyStreamUrl(track.id);
-            console.log('Using legacy URL anyway:', legacyUrl);
-            audio.src = legacyUrl;
-          } else {
-            audio.src = streamUrl;
-          }
-          
-          return audio.play();
-        })
+      audio.src = tracksAPI.getStreamUrl(track.id);
+      audio.play()
         .then(() => {
           isPlaying.value = true;
           startPlayTracking();
         })
         .catch((error) => {
           console.error('Failed to play track:', error);
-          console.error('Stream URL was:', streamUrl);
-          
-          // Последняя попытка с legacy URL
-          const legacyUrl = tracksAPI.getLegacyStreamUrl(track.id);
-          console.log('Last attempt with legacy URL:', legacyUrl);
-          audio.src = legacyUrl;
-          audio.play()
-            .then(() => {
-              console.log('Legacy URL worked!');
-              isPlaying.value = true;
-              startPlayTracking();
-            })
-            .catch(legacyError => {
-              console.error('Legacy URL also failed:', legacyError);
-              isPlaying.value = false;
-            });
+          isPlaying.value = false;
         });
     }
   };

@@ -50,23 +50,8 @@ const fetchTracks = async () => {
         loading.value = true;
         error.value = null;
         
-        // Проверяем доступность API
-        console.log('Checking API availability...');
-        const apiCheck = await fetch('/api/tracks?limit=1');
-        console.log('API check response:', apiCheck.status, apiCheck.statusText);
-        
         const response = await tracksAPI.getTracks(1, 20, props.genre);
         tracks.value = response.tracks || [];
-        
-        // Временная отладка: проверим структуру данных
-        if (tracks.value.length > 0) {
-            console.log('First track data:', tracks.value[0]);
-            console.log('Album fields:', {
-                album: tracks.value[0].album,
-                album_title: tracks.value[0].album_title,
-                album_id: tracks.value[0].album_id
-            });
-        }
         
         // Предварительно загружаем первые 10 обложек
         if (tracks.value.length > 0) {
@@ -81,14 +66,7 @@ const fetchTracks = async () => {
 };
 
 // Play track
-const playTrack = async (track: Track) => {
-    console.log('Playing track:', track.title, 'ID:', track.id);
-    
-    // Запускаем диагностику endpoints для первого трека
-    if (tracks.value.length > 0 && track.id === tracks.value[0].id) {
-        await tracksAPI.checkEndpoints(track.id);
-    }
-    
+const playTrack = (track: Track) => {
     // Загружаем весь список в очередь и начинаем воспроизведение выбранного трека
     playerStore.setQueue(tracks.value, track.id);
 };

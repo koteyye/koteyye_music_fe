@@ -142,10 +142,7 @@ export const tracksAPI = {
   },
 
   getStreamUrl: (trackId: string): string => {
-    // API_BASE_URL уже содержит /api, поэтому убираем дублирование
-    const newUrl = `${API_BASE_URL}/tracks/${trackId}/stream`;
-    console.log('Generated stream URL:', newUrl);
-    return newUrl;
+    return `${API_BASE_URL}/tracks/${trackId}/stream`;
   },
 
   getCoverUrl: (trackId: string): string => {
@@ -153,46 +150,7 @@ export const tracksAPI = {
       console.error('getCoverUrl: Invalid trackId:', trackId, typeof trackId);
       return `${API_BASE_URL}/tracks/invalid/cover`;
     }
-    const newUrl = `${API_BASE_URL}/tracks/${trackId}/cover`;
-    console.log('Generated cover URL:', newUrl);
-    return newUrl;
-  },
-
-  // Fallback методы для старых endpoints (без /api префикса)
-  getLegacyStreamUrl: (trackId: string): string => {
-    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
-    return `${baseUrl}/tracks/${trackId}/stream`;
-  },
-
-  getLegacyCoverUrl: (trackId: string): string => {
-    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
-    return `${baseUrl}/tracks/${trackId}/cover`;
-  },
-
-  // Диагностическая функция для проверки endpoints
-  checkEndpoints: async (trackId: string): Promise<void> => {
-    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
-    const endpoints = [
-      { name: 'API Stream', url: `${API_BASE_URL}/tracks/${trackId}/stream` },
-      { name: 'Legacy Stream', url: `${baseUrl}/tracks/${trackId}/stream` },
-      { name: 'API Cover', url: `${API_BASE_URL}/tracks/${trackId}/cover` },
-      { name: 'Legacy Cover', url: `${baseUrl}/tracks/${trackId}/cover` }
-    ];
-
-    console.log('=== Endpoint Diagnostics ===');
-    console.log('API_BASE_URL:', API_BASE_URL);
-    console.log('baseUrl:', baseUrl);
-    
-    for (const endpoint of endpoints) {
-      try {
-        // Используем GET вместо HEAD, так как HEAD может не поддерживаться
-        const response = await fetch(endpoint.url);
-        console.log(`${endpoint.name}: ${response.status} ${response.statusText} - ${endpoint.url}`);
-      } catch (error) {
-        console.error(`${endpoint.name}: ERROR - ${endpoint.url}`, error);
-      }
-    }
-    console.log('=== End Diagnostics ===');
+    return `${API_BASE_URL}/tracks/${trackId}/cover`;
   },
 
   // Проверка существования обложки
