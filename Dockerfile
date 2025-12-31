@@ -15,6 +15,10 @@ RUN npm ci
 # Копируем исходный код
 COPY . .
 
+# Устанавливаем переменную окружения для API URL
+ARG VITE_API_URL=https://music.kotey-ye.ru/api
+ENV VITE_API_URL=$VITE_API_URL
+
 # Собираем приложение для продакшена
 RUN npm run build
 
