@@ -49,6 +49,12 @@ const fetchTracks = async () => {
     try {
         loading.value = true;
         error.value = null;
+        
+        // Проверяем доступность API
+        console.log('Checking API availability...');
+        const apiCheck = await fetch('/api/tracks?limit=1');
+        console.log('API check response:', apiCheck.status, apiCheck.statusText);
+        
         const response = await tracksAPI.getTracks(1, 20, props.genre);
         tracks.value = response.tracks || [];
         
@@ -75,7 +81,14 @@ const fetchTracks = async () => {
 };
 
 // Play track
-const playTrack = (track: Track) => {
+const playTrack = async (track: Track) => {
+    console.log('Playing track:', track.title, 'ID:', track.id);
+    
+    // Запускаем диагностику endpoints для первого трека
+    if (tracks.value.length > 0 && track.id === tracks.value[0].id) {
+        await tracksAPI.checkEndpoints(track.id);
+    }
+    
     // Загружаем весь список в очередь и начинаем воспроизведение выбранного трека
     playerStore.setQueue(tracks.value, track.id);
 };

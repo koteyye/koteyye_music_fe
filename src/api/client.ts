@@ -167,6 +167,27 @@ export const tracksAPI = {
     return `${API_BASE_URL}/tracks/${trackId}/cover`;
   },
 
+  // Диагностическая функция для проверки endpoints
+  checkEndpoints: async (trackId: string): Promise<void> => {
+    const endpoints = [
+      { name: 'New Stream', url: `${API_BASE_URL}/api/tracks/${trackId}/stream` },
+      { name: 'Legacy Stream', url: `${API_BASE_URL}/tracks/${trackId}/stream` },
+      { name: 'New Cover', url: `${API_BASE_URL}/api/tracks/${trackId}/cover` },
+      { name: 'Legacy Cover', url: `${API_BASE_URL}/tracks/${trackId}/cover` }
+    ];
+
+    console.log('=== Endpoint Diagnostics ===');
+    for (const endpoint of endpoints) {
+      try {
+        const response = await fetch(endpoint.url, { method: 'HEAD' });
+        console.log(`${endpoint.name}: ${response.status} ${response.statusText} - ${endpoint.url}`);
+      } catch (error) {
+        console.error(`${endpoint.name}: ERROR - ${endpoint.url}`, error);
+      }
+    }
+    console.log('=== End Diagnostics ===');
+  },
+
   // Проверка существования обложки
   checkCoverExists: async (trackId: string): Promise<boolean> => {
     try {
