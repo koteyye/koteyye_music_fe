@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { usePlayerStore } from "../stores/player";
 import { tracksAPI } from "../api/client";
 import { getGenreDisplayName } from "../constants/genres";
-import { ArrowLeft, Play, Clock, Music, Cat } from "lucide-vue-next";
+import { ArrowLeft, Play, Pause, Clock, Music, Cat } from "lucide-vue-next";
 import TrackCover from "../components/TrackCover.vue";
 import type { AlbumDetailResponse, Track } from "../types";
 
@@ -194,11 +194,11 @@ onMounted(() => {
                         <div
                             v-for="(track, index) in albumDetail.tracks"
                             :key="track.id"
-                            class="group flex items-center gap-4 p-4 rounded-2xl transition-all hover:bg-gray-50 cursor-pointer"
+                            class="group flex items-center gap-3 p-3 md:p-4 rounded-2xl transition-all hover:bg-gray-50 cursor-pointer"
                             @click="playTrack(track)"
                         >
-                            <!-- Track Number -->
-                            <div class="w-8 text-center flex-shrink-0">
+                            <!-- Track Number (только десктоп) -->
+                            <div class="hidden md:block w-8 text-center flex-shrink-0">
                                 <span
                                     v-if="!isCurrentlyPlaying(track)"
                                     class="text-gray-400 group-hover:hidden"
@@ -221,8 +221,8 @@ onMounted(() => {
                                 </div>
                             </div>
 
-                            <!-- Track Cover (small) -->
-                            <div class="flex-shrink-0">
+                            <!-- Track Cover (только десктоп) -->
+                            <div class="hidden md:block flex-shrink-0">
                                 <TrackCover
                                     :track="track"
                                     size="small"
@@ -233,28 +233,32 @@ onMounted(() => {
                             <!-- Track Info -->
                             <div class="flex-1 min-w-0">
                                 <h3
-                                    class="font-semibold text-kot-dark truncate transition-colors"
+                                    class="font-semibold text-kot-dark truncate transition-colors text-sm md:text-base"
                                     :class="{
                                         'text-kot-orange': isCurrentlyPlaying(track),
                                     }"
                                 >
                                     {{ track.title }}
                                 </h3>
-                                <p class="text-sm text-gray-500 truncate">
+                                <p class="text-xs md:text-sm text-gray-500 truncate">
                                     {{ track.artist_name || track.artist }}
+                                </p>
+                                <!-- Длительность для мобильной версии -->
+                                <p class="text-xs text-gray-400 md:hidden">
+                                    {{ formatDuration(track.duration_seconds) }}
                                 </p>
                             </div>
 
-                            <!-- Duration -->
-                            <div class="text-sm text-gray-400 flex-shrink-0 flex items-center gap-2">
+                            <!-- Duration (только десктоп) -->
+                            <div class="hidden md:flex text-sm text-gray-400 flex-shrink-0 items-center gap-2">
                                 <Clock class="w-4 h-4" />
                                 {{ formatDuration(track.duration_seconds) }}
                             </div>
 
-                            <!-- Like Button -->
+                            <!-- Like Button (только десктоп) -->
                             <button
                                 @click.stop="toggleLike(track)"
-                                class="flex items-center gap-2 px-3 py-2 rounded-full transition-colors flex-shrink-0"
+                                class="hidden md:flex items-center gap-2 px-3 py-2 rounded-full transition-colors flex-shrink-0"
                                 :class="{
                                     'bg-orange-100 text-kot-orange': track.is_liked,
                                     'bg-gray-100 text-gray-400 hover:bg-orange-50 hover:text-kot-orange': !track.is_liked,
@@ -265,6 +269,19 @@ onMounted(() => {
                                     :class="{ 'fill-current': track.is_liked }"
                                 />
                                 <span class="text-sm font-medium">{{ track.likes_count }}</span>
+                            </button>
+
+                            <!-- Play Button (мобильная версия) -->
+                            <button 
+                                @click.stop="playTrack(track)"
+                                class="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-kot-orange text-white hover:bg-orange-600 transition-colors shadow-sm flex-shrink-0"
+                            >
+                                <Play 
+                                    v-if="!isCurrentlyPlaying(track)" 
+                                    :size="14" 
+                                    class="ml-0.5"
+                                />
+                                <Pause v-else :size="14" />
                             </button>
                         </div>
                     </div>

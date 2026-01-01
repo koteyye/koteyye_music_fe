@@ -308,6 +308,22 @@
                   <Repeat :size="20" class="text-current" />
                 </button>
               </div>
+
+              <!-- Volume Control -->
+              <div class="flex items-center gap-3 mt-6 max-w-sm mx-auto xl:mx-0">
+                <Volume2 :size="20" class="text-white/60 flex-shrink-0" />
+                <div class="flex-1">
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    :value="volume"
+                    @input="(e) => playerStore.setVolume(parseFloat((e.target as HTMLInputElement).value))"
+                    class="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -415,9 +431,10 @@ import { useRouter } from 'vue-router'
 import { usePlayerStore } from '../stores/player'
 import { tracksAPI } from '../api/client'
 import { getGenreDisplayName } from '../constants/genres'
+import { buildMediaUrl } from '../utils/media-urls'
 import { 
   Play, Pause, SkipForward, SkipBack, 
-  Cat, Share2, ChevronDown, Shuffle, Repeat, Headphones
+  Cat, Share2, ChevronDown, Shuffle, Repeat, Headphones, Volume2
 } from 'lucide-vue-next'
 
 const playerStore = usePlayerStore()
@@ -431,6 +448,7 @@ const progressPercent = computed(() => playerStore.progressPercent)
 const formattedProgress = computed(() => playerStore.formattedProgress)
 const formattedDuration = computed(() => playerStore.formattedDuration)
 const isShuffled = computed(() => playerStore.isShuffled)
+const volume = computed(() => playerStore.volume)
 
 // Helper computed для артиста и обложки (как в HeroPlayer)
 const trackArtist = computed(() => {
@@ -440,7 +458,7 @@ const trackArtist = computed(() => {
 
 const trackCover = computed(() => {
   const track = currentTrack.value;
-  return track?.cover_url || '/default-cover.jpg';
+  return buildMediaUrl(track?.cover_url) || '/default-cover.jpg';
 });
 
 // Get year from track release_date (как в HeroPlayer)
@@ -645,5 +663,39 @@ onUnmounted(() => {
 .slide-up-enter-from,
 .slide-up-leave-to {
   transform: translateY(100%);
+}
+
+/* Volume slider styling */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-webkit-slider-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
 }
 </style>
