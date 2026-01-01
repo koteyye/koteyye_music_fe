@@ -97,6 +97,15 @@ const handleTrackDeepLink = async () => {
             // Запускаем трек
             playerStore.playTrack(track);
             
+            // Проверяем, нужно ли открыть плеер
+            const shouldOpenPlayer = route.query.player === 'open';
+            if (shouldOpenPlayer && !playerStore.isExpanded) {
+                // Небольшая задержка, чтобы трек успел загрузиться
+                setTimeout(() => {
+                    playerStore.toggleExpand();
+                }, 500);
+            }
+            
             // Загружаем общий список треков для очереди
             const response = await tracksAPI.getTracks(1, 20);
             if (response.tracks && response.tracks.length > 0) {

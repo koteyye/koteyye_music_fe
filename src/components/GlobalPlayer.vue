@@ -513,12 +513,12 @@ const toggleLike = async () => {
     }
 };
 
-// Share track function (как в HeroPlayer)
+// Share track function - создаем ссылку с открытым плеером
 const shareTrack = async () => {
     if (!currentTrack.value) return;
     
     try {
-        const shareUrl = `${window.location.origin}/track/${currentTrack.value.id}`;
+        const shareUrl = `${window.location.origin}/track/${currentTrack.value.id}?player=open`;
         await navigator.clipboard.writeText(shareUrl);
         
         // Show toast notification

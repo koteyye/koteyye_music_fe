@@ -71,12 +71,12 @@ const handlePrev = () => playerStore.prevTrack();
 const handleNext = () => playerStore.nextTrack();
 const handleRepeat = () => console.log("Repeat toggled"); // TODO: Implement repeat mode
 
-// Share track function
+// Share track function - создаем ссылку с открытым плеером
 const shareTrack = async () => {
     if (!currentTrack.value) return;
     
     try {
-        const shareUrl = `${window.location.origin}/track/${currentTrack.value.id}`;
+        const shareUrl = `${window.location.origin}/track/${currentTrack.value.id}?player=open`;
         await navigator.clipboard.writeText(shareUrl);
         
         // Show toast notification
