@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
 /**
  * Строит полный URL для медиа-ресурса
@@ -35,7 +35,7 @@ export function buildMediaUrl(url: string | null | undefined): string | null {
  * @returns URL для обложки трека
  */
 export function getTrackCoverUrl(trackId: string): string {
-  return `${API_BASE_URL}/api/tracks/${trackId}/cover`;
+  return `${API_BASE_URL}/tracks/${trackId}/cover`;
 }
 
 /**
@@ -44,7 +44,7 @@ export function getTrackCoverUrl(trackId: string): string {
  * @returns URL для стриминга трека
  */
 export function getTrackStreamUrl(trackId: string): string {
-  return `${API_BASE_URL}/api/tracks/${trackId}/stream`;
+  return `${API_BASE_URL}/tracks/${trackId}/stream`;
 }
 
 /**
@@ -53,5 +53,5 @@ export function getTrackStreamUrl(trackId: string): string {
  * @returns URL для обложки альбома
  */
 export function getAlbumCoverUrl(albumId: string): string {
-  return `${API_BASE_URL}/api/albums/${albumId}/cover`;
+  return `${API_BASE_URL}/albums/${albumId}/cover`;
 }
