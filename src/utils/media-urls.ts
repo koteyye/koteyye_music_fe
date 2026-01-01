@@ -9,24 +9,33 @@ export function buildMediaUrl(url: string | null | undefined): string | null {
   if (!url || url.trim() === '') {
     return null;
   }
+  
+  console.log('buildMediaUrl called with:', url, 'API_BASE_URL:', API_BASE_URL);
 
   // Если URL уже полный (содержит протокол), возвращаем как есть
   if (url.startsWith('http://') || url.startsWith('https://')) {
+    console.log('buildMediaUrl: URL is already full, returning as is');
     return url;
   }
 
   // Если URL начинается с /api/ - это уже полный путь от API, просто добавляем base URL
   if (url.startsWith('/api/')) {
-    return `${API_BASE_URL}${url}`;
+    const result = `${API_BASE_URL}${url}`;
+    console.log('buildMediaUrl: URL starts with /api/, result:', result);
+    return result;
   }
 
   // Если URL начинается с /, добавляем base URL (который уже содержит /api)
   if (url.startsWith('/')) {
-    return `${API_BASE_URL}${url}`;
+    const result = `${API_BASE_URL}${url}`;
+    console.log('buildMediaUrl: URL starts with /, result:', result);
+    return result;
   }
 
   // Иначе считаем это относительным путем и добавляем /
-  return `${API_BASE_URL}/${url}`;
+  const result = `${API_BASE_URL}/${url}`;
+  console.log('buildMediaUrl: relative URL, result:', result);
+  return result;
 }
 
 /**

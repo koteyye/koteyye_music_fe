@@ -35,6 +35,7 @@ const preloadTrackCovers = (tracks: Track[]) => {
             if (track.cover_url) {
                 // Используем новый buildMediaUrl для обработки cover_url
                 const coverUrl = buildMediaUrl(track.cover_url);
+                console.log('TrackList preload: cover_url', track.cover_url, '-> buildMediaUrl result:', coverUrl);
                 if (coverUrl) img.src = coverUrl;
             } else {
                 // Fallback на старый метод

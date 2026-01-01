@@ -792,10 +792,14 @@ const makeAdmin = () => {
                                 >
                                     <!-- Cover -->
                                     <img
+                                        v-if="album.tracks?.[0]?.cover_url || album.cover_url"
                                         :src="buildMediaUrl(album.tracks?.[0]?.cover_url || album.cover_url)"
                                         :alt="album.title"
                                         class="w-16 h-16 rounded-xl object-cover shadow-sm"
                                     />
+                                    <div v-else class="w-16 h-16 rounded-xl bg-kot-orange/20 flex items-center justify-center">
+                                        <Music class="w-8 h-8 text-kot-orange" />
+                                    </div>
 
                                     <!-- Album Info -->
                                     <div class="flex-1 min-w-0">
