@@ -5,9 +5,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080
  * @param url - относительный URL от API (например: "/api/tracks/123/cover") или полный URL
  * @returns полный URL для использования в src атрибутах
  */
-export function buildMediaUrl(url: string | null | undefined): string | null {
+export function buildMediaUrl(url: string | null | undefined): string | undefined {
   if (!url || url.trim() === '') {
-    return null;
+    return undefined;
   }
   
   console.log('buildMediaUrl called with:', url, 'API_BASE_URL:', API_BASE_URL);
@@ -18,9 +18,12 @@ export function buildMediaUrl(url: string | null | undefined): string | null {
     return url;
   }
 
-  // Если URL начинается с /api/ - это уже полный путь от API, просто добавляем base URL
+  // Если URL начинается с /api/ - это уже полный путь от API
+  // Нужно заменить /api/ на базовый URL (который уже содержит /api)
   if (url.startsWith('/api/')) {
-    const result = `${API_BASE_URL}${url}`;
+    // Убираем /api/ из начала URL и добавляем к базовому URL
+    const pathWithoutApi = url.substring(4); // убираем '/api'
+    const result = `${API_BASE_URL}${pathWithoutApi}`;
     console.log('buildMediaUrl: URL starts with /api/, result:', result);
     return result;
   }

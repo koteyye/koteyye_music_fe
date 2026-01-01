@@ -3,7 +3,7 @@ import { onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from './stores/auth';
 import { usePlayerStore } from './stores/player';
 import GlobalPlayer from './components/GlobalPlayer.vue';
-import backgroundImage from './assets/images/background.png';
+
 
 const authStore = useAuthStore();
 const playerStore = usePlayerStore();
@@ -42,13 +42,7 @@ onUnmounted(() => {
     <div 
         id="app" 
         class="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-24"
-        :style="{ 
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            backgroundRepeat: 'no-repeat'
-        }"
+
     >
         <!-- Main router view -->
         <RouterView />
