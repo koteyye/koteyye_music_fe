@@ -146,9 +146,9 @@ const getAlbumCover = (album: Album): string => {
 
 const handleImageError = (event: Event) => {
   const img = event.target as HTMLImageElement
-  if (img.src !== '/default-cover.jpg') {
-    img.src = '/default-cover.jpg'
-  }
+  console.log('AlbumGrid: Image error for album, showing fallback icon instead of default-cover.jpg')
+  // Не устанавливаем default-cover.jpg, оставляем fallback в виде иконки
+  img.style.display = 'none'
 }
 
 // Actions

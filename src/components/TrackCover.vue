@@ -125,16 +125,21 @@ const coverUrl = computed(() => {
     return baseUrl + timestamp
   }
   
-  // Fallback - используем старый способ через API
-  const trackId = props.track.id
-  if (!trackId || typeof trackId !== 'string') {
-    console.error('TrackCover: Invalid track ID:', trackId, 'Track:', props.track)
-    return null
+  // Fallback - используем старый способ через API для s3_image_key
+  if (props.track.s3_image_key && props.track.s3_image_key.trim() !== '') {
+    const trackId = props.track.id
+    if (!trackId || typeof trackId !== 'string') {
+      console.error('TrackCover: Invalid track ID:', trackId, 'Track:', props.track)
+      return null
+    }
+    
+    console.log('TrackCover: using fallback s3_image_key', props.track.s3_image_key, '-> getCoverUrl for', trackId)
+    // Добавляем параметр для retry
+    const timestamp = retryCount.value > 0 ? `?v=${Date.now()}` : ''
+    return tracksAPI.getCoverUrl(trackId) + timestamp
   }
   
-  // Добавляем параметр для retry
-  const timestamp = retryCount.value > 0 ? `?v=${Date.now()}` : ''
-  return tracksAPI.getCoverUrl(trackId) + timestamp
+  return null
 })
 
 const showFallback = computed(() => {
