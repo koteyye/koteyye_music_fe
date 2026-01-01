@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
 import { adminAPI } from "../api/client";
 import { GENRE_OPTIONS } from "../constants/genres";
+import { buildMediaUrl } from "../utils/media-urls";
 import FormSelect from "../components/FormSelect.vue";
 import TrackCover from "../components/TrackCover.vue";
 import {

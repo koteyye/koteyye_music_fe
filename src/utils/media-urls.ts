@@ -15,20 +15,18 @@ export function buildMediaUrl(url: string | null | undefined): string | null {
     return url;
   }
 
-  // Если URL начинается с /api/ - НЕ добавляем /api, так как он уже есть
+  // Если URL начинается с /api/ - это уже полный путь от API, просто добавляем base URL
   if (url.startsWith('/api/')) {
-    // Убираем /api из URL и добавляем только base URL
-    const cleanUrl = url.replace('/api/', '/');
-    return `${API_BASE_URL}${cleanUrl}`;
+    return `${API_BASE_URL}${url}`;
   }
 
-  // Если URL начинается с /, добавляем base URL + /api
+  // Если URL начинается с /, добавляем base URL (который уже содержит /api)
   if (url.startsWith('/')) {
-    return `${API_BASE_URL}/api${url}`;
+    return `${API_BASE_URL}${url}`;
   }
 
-  // Иначе считаем это относительным путем и добавляем /api/
-  return `${API_BASE_URL}/api/${url}`;
+  // Иначе считаем это относительным путем и добавляем /
+  return `${API_BASE_URL}/${url}`;
 }
 
 /**
