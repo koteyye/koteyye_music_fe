@@ -272,7 +272,7 @@ export const userAPI = {
 
   removeAvatar: async (): Promise<UserProfile> => {
     const response = await apiClient.put<UserProfile>("/users/me", {
-      avatar_url: null
+      avatar_key: null
     });
     return response.data;
   },

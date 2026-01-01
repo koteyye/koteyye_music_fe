@@ -328,7 +328,7 @@ const uploadNewAvatar = async () => {
     const avatarUrl = await uploadAvatar(selectedFile.value)
     
     const updatedProfile = await userAPI.updateProfile({
-      avatar_url: avatarUrl
+      avatar_key: avatarUrl
     })
     
     profile.value = updatedProfile

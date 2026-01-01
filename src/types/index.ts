@@ -82,7 +82,7 @@ export interface UserProfile {
 // Update profile request
 export interface UpdateProfileRequest {
   name?: string | null;
-  avatar_url?: string | null;
+  avatar_key?: string | null;
 }
 
 // Album interface (simple)

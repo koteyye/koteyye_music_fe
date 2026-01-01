@@ -80,7 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const updateUserProfile = async (data: { name?: string; avatar_url?: string | null }) => {
+  const updateUserProfile = async (data: { name?: string; avatar_key?: string | null }) => {
     try {
       userProfile.value = await userAPI.updateProfile(data);
       return userProfile.value;
