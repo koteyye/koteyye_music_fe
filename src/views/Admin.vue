@@ -791,7 +791,7 @@ const makeAdmin = () => {
                                 >
                                     <!-- Cover -->
                                     <img
-                                        :src="album.tracks?.[0]?.cover_url || album.cover_url"
+                                        :src="buildMediaUrl(album.tracks?.[0]?.cover_url || album.cover_url)"
                                         :alt="album.title"
                                         class="w-16 h-16 rounded-xl object-cover shadow-sm"
                                     />

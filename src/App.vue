@@ -38,7 +38,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div id="app" class="min-h-screen bg-cream pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-24">
+    <div id="app" class="min-h-screen bg-background pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-24">
         <!-- Main router view -->
         <RouterView />
         

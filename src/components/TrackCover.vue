@@ -97,8 +97,18 @@ const lazyRef = ref<HTMLElement>()
 // Computed properties
 const hasTrackCover = computed(() => {
   // Проверяем сначала cover_url (новая архитектура), потом s3_image_key (старая)
-  return (props.track.cover_url && props.track.cover_url.trim() !== '') ||
-         (props.track.s3_image_key && props.track.s3_image_key.trim() !== '')
+  const hasCover = (props.track.cover_url && props.track.cover_url.trim() !== '') ||
+                   (props.track.s3_image_key && props.track.s3_image_key.trim() !== '')
+  
+  console.log('TrackCover: hasTrackCover for track', props.track.title, {
+    has_cover_url: !!(props.track.cover_url && props.track.cover_url.trim() !== ''),
+    cover_url: props.track.cover_url,
+    has_s3_key: !!(props.track.s3_image_key && props.track.s3_image_key.trim() !== ''),
+    s3_image_key: props.track.s3_image_key,
+    result: hasCover
+  })
+  
+  return hasCover
 })
 
 const coverUrl = computed(() => {
@@ -107,6 +117,7 @@ const coverUrl = computed(() => {
   // Если есть cover_url - используем его через buildMediaUrl
   if (props.track.cover_url && props.track.cover_url.trim() !== '') {
     const baseUrl = buildMediaUrl(props.track.cover_url)
+    console.log('TrackCover: using cover_url', props.track.cover_url, '-> buildMediaUrl result:', baseUrl)
     if (!baseUrl) return null
     
     // Добавляем параметр для retry

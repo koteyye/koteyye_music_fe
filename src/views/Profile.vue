@@ -1,6 +1,6 @@
 <template>
   <ProtectedRoute>
-    <div class="min-h-screen bg-gradient-to-br from-kot-dark to-slate-900">
+    <div class="min-h-screen bg-gradient-to-br from-kot-dark/90 to-slate-900/90 backdrop-blur-sm">
     <div class="container mx-auto px-4 py-8">
       <div v-if="loading" class="flex justify-center items-center h-64">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-kot-orange"></div>

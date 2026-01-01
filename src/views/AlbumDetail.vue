@@ -103,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-cream p-4 md:p-8">
+    <div class="min-h-screen bg-cream/90 backdrop-blur-sm p-4 md:p-8">
         <div class="max-w-6xl mx-auto">
             <!-- Back Button -->
             <button

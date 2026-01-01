@@ -135,7 +135,13 @@ const getTrackWordEnding = (count: number): string => {
 }
 
 const getAlbumCover = (album: Album): string => {
-  return buildMediaUrl(album.cover_url) || '/default-cover.jpg'
+  const result = buildMediaUrl(album.cover_url) || '/default-cover.jpg'
+  console.log('AlbumGrid: getAlbumCover for', album.title, {
+    cover_url: album.cover_url,
+    buildMediaUrl_result: buildMediaUrl(album.cover_url),
+    final_result: result
+  })
+  return result
 }
 
 const handleImageError = (event: Event) => {
