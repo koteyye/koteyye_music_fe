@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { usePlayerStore } from "../stores/player";
 import { tracksAPI } from "../api/client";
 import { getGenreDisplayName } from "../constants/genres";
+import { buildMediaUrl } from "../utils/media-urls";
 import { ArrowLeft, Play, Pause, Clock, Music, Cat } from "lucide-vue-next";
 import TrackCover from "../components/TrackCover.vue";
 import type { AlbumDetailResponse, Track } from "../types";
@@ -133,7 +134,7 @@ onMounted(() => {
                             <div class="w-64 h-64 rounded-2xl overflow-hidden shadow-2xl">
                                 <img
                                     v-if="albumDetail.album.cover_url"
-                                    :src="albumDetail.album.cover_url"
+                                    :src="buildMediaUrl(albumDetail.album.cover_url)"
                                     :alt="albumDetail.album.title"
                                     class="w-full h-full object-cover"
                                 />
