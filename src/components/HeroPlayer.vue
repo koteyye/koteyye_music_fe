@@ -69,7 +69,7 @@ const handleVolumeChange = (event: Event) => {
 const handleShuffle = () => playerStore.toggleShuffle();
 const handlePrev = () => playerStore.prevTrack();
 const handleNext = () => playerStore.nextTrack();
-const handleRepeat = () => console.log("Repeat toggled"); // TODO: Implement repeat mode
+const handleRepeat = () => {}; // TODO: Implement repeat mode
 
 // Share track function - создаем ссылку с открытым плеером
 const shareTrack = async () => {
@@ -132,7 +132,6 @@ const toggleLike = async () => {
 // Navigate to album page
 const goToAlbum = () => {
     const track = currentTrack.value;
-    console.log('goToAlbum called for current track:', track?.title, 'album_id:', track?.album_id);
     
     if (track?.album_id) {
         router.push(`/albums/${track.album_id}`);

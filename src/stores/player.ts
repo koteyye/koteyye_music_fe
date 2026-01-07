@@ -98,7 +98,6 @@ export const usePlayerStore = defineStore('player', () => {
           try {
             await tracksAPI.recordPlay(currentTrack.value.id);
             hasRecordedPlay.value = true;
-            console.log(`Play recorded for track: ${currentTrack.value.title}`);
           } catch (error) {
             console.error('Failed to record play:', error);
           }

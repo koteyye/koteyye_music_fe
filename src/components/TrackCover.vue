@@ -5,7 +5,7 @@
       sizeClasses,
       className
     ]"
-    :ref="lazyRef"
+    ref="rootElement"
   >
     <!-- Loading State -->
     <div 
@@ -35,7 +35,7 @@
     <!-- Actual Image -->
     <img
       v-if="shouldLoadImage && !showFallback"
-      :src="coverUrl"
+      :src="coverUrl || undefined"
       :alt="`${track.title} обложка`"
       :class="[
         'w-full h-full object-cover transition-opacity duration-300',
@@ -83,7 +83,7 @@ const props = withDefaults(defineProps<Props>(), {
   maxRetries: 2
 })
 
-const emit = defineEmits<{
+defineEmits<{
   play: []
 }>()
 
@@ -92,21 +92,15 @@ const isLoading = ref(true)
 const imageError = ref(false)
 const retryCount = ref(0)
 const isInView = ref(!props.lazy)
-const lazyRef = ref<HTMLElement>()
+const rootElement = ref<HTMLElement | null>(null)
 
 // Computed properties
 const hasTrackCover = computed(() => {
   // Проверяем сначала cover_url (новая архитектура), потом s3_image_key (старая)
+  // И наконец проверяем наличие album_id для фоллбэка на обложку альбома
   const hasCover = (props.track.cover_url && props.track.cover_url.trim() !== '') ||
-                   (props.track.s3_image_key && props.track.s3_image_key.trim() !== '')
-  
-  console.log('TrackCover: hasTrackCover for track', props.track.title, {
-    has_cover_url: !!(props.track.cover_url && props.track.cover_url.trim() !== ''),
-    cover_url: props.track.cover_url,
-    has_s3_key: !!(props.track.s3_image_key && props.track.s3_image_key.trim() !== ''),
-    s3_image_key: props.track.s3_image_key,
-    result: hasCover
-  })
+                   (props.track.s3_image_key && props.track.s3_image_key.trim() !== '') ||
+                   (!!props.track.album_id)
   
   return hasCover
 })
@@ -117,7 +111,6 @@ const coverUrl = computed(() => {
   // Если есть cover_url - используем его через buildMediaUrl
   if (props.track.cover_url && props.track.cover_url.trim() !== '') {
     const baseUrl = buildMediaUrl(props.track.cover_url)
-    console.log('TrackCover: using cover_url', props.track.cover_url, '-> buildMediaUrl result:', baseUrl)
     if (!baseUrl) return null
     
     // Добавляем параметр для retry
@@ -133,10 +126,15 @@ const coverUrl = computed(() => {
       return null
     }
     
-    console.log('TrackCover: using fallback s3_image_key', props.track.s3_image_key, '-> getCoverUrl for', trackId)
     // Добавляем параметр для retry
     const timestamp = retryCount.value > 0 ? `?v=${Date.now()}` : ''
     return tracksAPI.getCoverUrl(trackId) + timestamp
+  }
+
+  // Fallback - используем обложку альбома, если она есть
+  if (props.track.album_id) {
+    const timestamp = retryCount.value > 0 ? `?v=${Date.now()}` : ''
+    return tracksAPI.getAlbumCoverUrl(props.track.album_id) + timestamp
   }
   
   return null
@@ -228,7 +226,6 @@ const handleImageLoad = () => {
 const handleImageError = () => {
   if (retryCount.value < props.maxRetries) {
     retryCount.value++
-    console.log(`Retrying cover load for track ${props.track.id}, attempt ${retryCount.value}`)
   } else {
     imageError.value = true
     isLoading.value = false
@@ -243,7 +240,7 @@ const handleImageError = () => {
 
 // Intersection Observer для lazy loading
 onMounted(() => {
-  if (props.lazy && lazyRef.value) {
+  if (props.lazy && rootElement.value) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -254,7 +251,7 @@ onMounted(() => {
       { threshold: 0.1 }
     )
     
-    observer.observe(lazyRef.value)
+    observer.observe(rootElement.value)
     
     // Cleanup
     const cleanup = () => observer.disconnect()

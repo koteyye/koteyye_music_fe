@@ -93,7 +93,7 @@ export const validateAllCovers = async (tracks: any[]) => {
   console.log(`- Successful: ${successful}`)
   console.log(`- Failed: ${failed}`)
   
-  results.forEach((result, index) => {
+  results.forEach((result) => {
     if (result.status === 'fulfilled') {
       const data = result.value
       if (!data.coverExists && data.hasImageKey) {

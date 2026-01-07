@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
@@ -12,7 +13,7 @@ export default {
         'kot-dark': '#2C2C2C'
       },
       fontFamily: {
-        sans: ['Nunito', 'sans-serif'],
+        sans: ['Montserrat', 'sans-serif'],
       },
       borderRadius: {
         '3xl': '1.5rem',

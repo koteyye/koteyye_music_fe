@@ -5,7 +5,7 @@ import { usePlayerStore } from "../stores/player";
 import { tracksAPI } from "../api/client";
 import { buildMediaUrl } from "../utils/media-urls";
 import { getGenreDisplayName } from "../constants/genres";
-import { Play, Pause, Cat, Clock, Music } from "lucide-vue-next";
+import { Play, Pause, Cat, Clock } from "lucide-vue-next";
 import TrackCover from "./TrackCover.vue";
 import type { Track } from "../types";
 
@@ -35,7 +35,6 @@ const preloadTrackCovers = (tracks: Track[]) => {
             if (track.cover_url) {
                 // Используем новый buildMediaUrl для обработки cover_url
                 const coverUrl = buildMediaUrl(track.cover_url);
-                console.log('TrackList preload: cover_url', track.cover_url, '-> buildMediaUrl result:', coverUrl);
                 if (coverUrl) img.src = coverUrl;
             } else {
                 // Fallback на старый метод
@@ -134,8 +133,6 @@ watch(() => props.genre, () => {
 
 // Navigate to album page
 const goToAlbum = (track: Track) => {
-    console.log('goToAlbum called for track:', track.title, 'album_id:', track.album_id);
-    
     if (track.album_id) {
         router.push(`/albums/${track.album_id}`);
     } else {
@@ -145,9 +142,9 @@ const goToAlbum = (track: Track) => {
 </script>
 
 <template>
-    <div class="bg-white rounded-3xl shadow-xl p-6">
+    <div class="bg-white dark:bg-zinc-800 rounded-3xl shadow-xl p-6 transition-colors duration-300">
         <h2
-            class="text-2xl font-bold text-kot-dark mb-4 flex items-center gap-2"
+            class="text-2xl font-bold text-kot-dark dark:text-gray-100 mb-4 flex items-center gap-2 transition-colors"
         >
             <Music class="w-6 h-6 text-kot-orange" />
             Треки
@@ -187,8 +184,8 @@ const goToAlbum = (track: Track) => {
                 :key="track.id"
                 class="flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl transition-all duration-200 cursor-pointer group"
                 :class="{
-                    'bg-orange-50': isCurrentlyPlaying(track),
-                    'hover:bg-orange-50': !isCurrentlyPlaying(track),
+                    'bg-orange-50 dark:bg-orange-900/20': isCurrentlyPlaying(track),
+                    'hover:bg-orange-50 dark:hover:bg-zinc-700/50': !isCurrentlyPlaying(track),
                 }"
                 @click="playTrack(track)"
                 style="min-height: 68px;"
@@ -208,17 +205,17 @@ const goToAlbum = (track: Track) => {
                 <!-- Track Info -->
                 <div class="flex-1 min-w-0">
                     <h3
-                        class="font-semibold text-kot-dark truncate transition-colors text-sm md:text-base"
+                        class="font-medium text-kot-dark dark:text-gray-200 truncate transition-colors text-sm md:text-base"
                         :class="{
-                            'text-kot-orange': isCurrentlyPlaying(track),
+                            'text-kot-orange dark:text-kot-orange': isCurrentlyPlaying(track),
                         }"
                     >
                         {{ track.title }}
                     </h3>
-                    <p class="text-sm text-gray-500 truncate">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
                         {{ track.artist_name || track.artist }}
                     </p>
-                    <div class="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                    <div class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 mt-1">
                         <!-- Album (скрыт на мобильных) -->
                         <button
                             v-if="track.album_title || track.album"
@@ -266,7 +263,7 @@ const goToAlbum = (track: Track) => {
                         :class="{
                             'bg-kot-orange text-white shadow-lg shadow-orange-500/30':
                                 isCurrentlyPlaying(track),
-                            'bg-gray-100 text-gray-400 group-hover:bg-kot-orange group-hover:text-white':
+                            'bg-gray-100 dark:bg-zinc-700 text-gray-400 dark:text-gray-300 group-hover:bg-kot-orange dark:group-hover:bg-kot-orange group-hover:text-white':
                                 !isCurrentlyPlaying(track),
                         }"
                         style="min-width: 44px; min-height: 44px;"
@@ -283,8 +280,8 @@ const goToAlbum = (track: Track) => {
                         @click.stop="toggleLike(track)"
                         class="flex items-center gap-2 px-4 py-2 rounded-full transition-colors"
                         :class="{
-                            'bg-orange-100 text-kot-orange': track.is_liked,
-                            'bg-gray-100 text-gray-400 hover:bg-orange-50 hover:text-kot-orange':
+                            'bg-orange-100 dark:bg-orange-900/40 text-kot-orange': track.is_liked,
+                            'bg-gray-100 dark:bg-zinc-700 text-gray-400 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-kot-orange':
                                 !track.is_liked,
                         }"
                     >

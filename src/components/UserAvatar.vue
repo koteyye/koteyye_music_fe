@@ -9,16 +9,16 @@
     <!-- Avatar Circle -->
     <div
       :class="[
-        'rounded-full flex items-center justify-center text-white font-bold',
+        'rounded-full flex items-center justify-center text-white font-bold overflow-hidden',
         sizeClasses
       ]"
       :style="{ backgroundColor: avatarUrl ? 'transparent' : '#f97316' }"
     >
-      <img
-        v-if="avatarUrl"
-        :src="avatarUrl"
-        :alt="name || email"
-        :class="['rounded-full object-cover', sizeClasses]"
+      <img 
+        v-if="avatarUrl" 
+        :src="avatarUrl" 
+        :alt="name || email || 'User'"
+        class="w-full h-full object-cover"
       />
       <span v-else :class="textSizeClasses">
         {{ getInitials(name || email || 'U') }}
@@ -93,15 +93,15 @@ const textSizeClasses = computed(() => {
 const nameSizeClasses = computed(() => {
   switch (props.size) {
     case 'sm':
-      return 'text-xs text-gray-600'
+      return 'text-xs text-gray-600 dark:text-gray-400'
     case 'md':
-      return 'text-xs text-gray-700'
+      return 'text-xs text-gray-700 dark:text-gray-300'
     case 'lg':
-      return 'text-sm text-gray-700'
+      return 'text-sm text-gray-700 dark:text-gray-300'
     case 'xl':
-      return 'text-base text-gray-800'
+      return 'text-base text-gray-800 dark:text-gray-200'
     default:
-      return 'text-xs text-gray-700'
+      return 'text-xs text-gray-700 dark:text-gray-300'
   }
 })
 

@@ -3,9 +3,9 @@
     <!-- Loading State -->
     <div v-if="loading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
       <div v-for="i in 10" :key="i" class="animate-pulse">
-        <div class="aspect-square bg-gray-200 rounded-xl mb-3"></div>
-        <div class="h-4 bg-gray-200 rounded mb-2"></div>
-        <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+        <div class="aspect-square bg-gray-200 dark:bg-zinc-800 rounded-xl mb-3"></div>
+        <div class="h-4 bg-gray-200 dark:bg-zinc-800 rounded mb-2"></div>
+        <div class="h-3 bg-gray-200 dark:bg-zinc-800 rounded w-3/4"></div>
       </div>
     </div>
 
@@ -37,22 +37,22 @@
           <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
             <button
               @click.stop="playAlbum(album)"
-              class="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+              class="w-12 h-12 rounded-full bg-white/90 dark:bg-zinc-800/90 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 transition-colors shadow-lg"
             >
-              <Play :size="20" class="text-gray-900 ml-0.5" />
+              <Play :size="20" class="text-gray-900 dark:text-white ml-0.5" />
             </button>
           </div>
         </div>
 
         <!-- Album Info -->
         <div class="space-y-1">
-          <h3 class="font-semibold text-gray-900 group-hover:text-kot-orange transition-colors line-clamp-1">
+          <h3 class="font-medium text-gray-900 dark:text-gray-100 group-hover:text-kot-orange dark:group-hover:text-kot-orange transition-colors line-clamp-1">
             {{ album.title }}
           </h3>
-          <p class="text-sm text-gray-600 line-clamp-1">
+          <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
             {{ album.artist }}
           </p>
-          <div class="flex items-center text-xs text-gray-500 space-x-2">
+          <div class="flex items-center text-xs text-gray-500 dark:text-gray-500 space-x-2">
             <span>{{ album.year || getAlbumYear(album) }}</span>
             <span v-if="album.tracks?.length">•</span>
             <span v-if="album.tracks?.length">{{ album.tracks.length }} трек{{ getTrackWordEnding(album.tracks.length) }}</span>
@@ -63,11 +63,11 @@
 
     <!-- Empty State -->
     <div v-else class="text-center py-12">
-      <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-        <Cat :size="32" class="text-gray-400" />
+      <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center transition-colors">
+        <Cat :size="32" class="text-gray-400 dark:text-gray-500" />
       </div>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Альбомы не найдены</h3>
-      <p class="text-gray-600">{{ genre ? `Нет альбомов в жанре "${getGenreDisplayName(genre)}"` : 'Попробуйте изменить фильтр жанра' }}</p>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 transition-colors">Альбомы не найдены</h3>
+      <p class="text-gray-600 dark:text-gray-400 transition-colors">{{ genre ? `Нет альбомов в жанре "${getGenreDisplayName(genre)}"` : 'Попробуйте изменить фильтр жанра' }}</p>
     </div>
 
     <!-- Load More Button -->
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePlayerStore } from '../stores/player'
 import { tracksAPI } from '../api/client'
@@ -136,17 +136,11 @@ const getTrackWordEnding = (count: number): string => {
 
 const getAlbumCover = (album: Album): string => {
   const result = buildMediaUrl(album.cover_url) || '/default-cover.jpg'
-  console.log('AlbumGrid: getAlbumCover for', album.title, {
-    cover_url: album.cover_url,
-    buildMediaUrl_result: buildMediaUrl(album.cover_url),
-    final_result: result
-  })
   return result
 }
 
 const handleImageError = (event: Event) => {
   const img = event.target as HTMLImageElement
-  console.log('AlbumGrid: Image error for album, showing fallback icon instead of default-cover.jpg')
   // Не устанавливаем default-cover.jpg, оставляем fallback в виде иконки
   img.style.display = 'none'
 }
@@ -195,21 +189,16 @@ const goToAlbum = (albumId: string) => {
 
 const playAlbum = async (album: Album) => {
   try {
-    console.log('Playing album:', album.title, 'tracks:', album.tracks?.length || 'none')
     
     // Если у альбома есть треки, воспроизводим их
     if (album.tracks && album.tracks.length > 0) {
-      console.log('Setting queue with tracks:', album.tracks)
       playerStore.setQueue(album.tracks, album.tracks[0].id)
     } else {
       // Альбомы из списка не содержат треков, нужно загрузить детали альбома
-      console.log('Loading album details to get tracks...')
       const albumDetails = await tracksAPI.getAlbumDetails(album.id)
       if (albumDetails.tracks && albumDetails.tracks.length > 0) {
-        console.log('Got tracks from album details:', albumDetails.tracks)
         playerStore.setQueue(albumDetails.tracks, albumDetails.tracks[0].id)
       } else {
-        console.log('No tracks found, navigating to album page')
         goToAlbum(album.id)
       }
     }

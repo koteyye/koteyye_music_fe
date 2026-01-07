@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onUnmounted, ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { LogOut, Shield } from "lucide-vue-next";
+import { LogOut, Shield, Sun, Moon } from "lucide-vue-next";
 
 import TrackList from "../components/TrackList.vue";
 import AlbumGrid from "../components/AlbumGrid.vue";
@@ -12,10 +12,12 @@ import KoteyyeLogo from "../components/KoteyyeLogo.vue";
 import { usePlayerStore } from "../stores/player";
 import { useAuthStore } from "../stores/auth";
 import { tracksAPI } from "../api/client";
-import type { UserProfile, Track } from "../types";
+import { useTheme } from "../composables/useTheme";
+import type { UserProfile } from "../types";
 
 const playerStore = usePlayerStore();
 const authStore = useAuthStore();
+const { isDark, toggleTheme } = useTheme();
 const router = useRouter();
 const route = useRoute();
 
@@ -139,26 +141,36 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="min-h-screen p-4 md:p-8" style="background-color: rgba(253, 246, 227, 0.9); backdrop-filter: blur(4px);">
+    <div class="min-h-screen p-4 md:p-8 bg-[rgba(253,246,227,0.9)] backdrop-blur-[4px] dark:bg-zinc-900/90 dark:backdrop-blur-none transition-colors duration-300">
         <div class="max-w-6xl mx-auto space-y-8">
             <!-- Header with Logo and Auth Button -->
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-3">
-                    <div class="w-16 h-16 border-2 border-orange-500 rounded-2xl flex items-center justify-center shadow-lg p-2">
+                    <div class="w-16 h-16 border-2 border-orange-500 rounded-2xl flex items-center justify-center shadow-lg p-2 bg-cream dark:bg-zinc-800 transition-colors">
                         <KoteyyeLogo container-class="w-full h-full" />
                     </div>
-                    <h1 class="text-3xl md:text-4xl font-bold text-kot-dark">
+                    <h1 class="text-3xl md:text-4xl font-bold text-kot-dark dark:text-gray-100 transition-colors">
                         Koteyye Music
                     </h1>
                 </div>
 
                 <!-- Auth Section -->
                 <div class="flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <button 
+                        @click="toggleTheme" 
+                        class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-kot-dark dark:text-gray-200"
+                        :title="isDark ? 'Включить светлую тему' : 'Включить темную тему'"
+                    >
+                        <Sun v-if="isDark" class="w-6 h-6" />
+                        <Moon v-else class="w-6 h-6" />
+                    </button>
+
                     <!-- Guest: Show Login Button -->
                     <button
                         v-if="authStore.isGuest"
                         @click="goToLogin"
-                        class="px-6 py-3 bg-kot-orange hover:bg-orange-600 text-white font-semibold rounded-full transition-colors shadow-lg hover:shadow-xl"
+                        class="px-6 py-3 bg-kot-orange hover:bg-orange-600 text-white font-medium rounded-full transition-colors shadow-lg hover:shadow-xl"
                     >
                         Войти
                     </button>

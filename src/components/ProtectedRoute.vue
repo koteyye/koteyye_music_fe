@@ -65,32 +65,14 @@ const isAuthorized = computed(() => {
 })
 
 onMounted(async () => {
-  console.log('ProtectedRoute mounted:', {
-    requireAuth: props.requireAuth,
-    adminOnly: props.adminOnly,
-    token: !!authStore.token,
-    user: !!authStore.user,
-    isGuest: authStore.isGuest,
-    isAdmin: authStore.isAdmin
-  })
-  
   try {
     // Дождаться инициализации auth store
     await new Promise(resolve => setTimeout(resolve, 100))
     
     // Если есть токен но нет данных пользователя - загрузить
     if (authStore.token && !authStore.user) {
-      console.log('Fetching user data...')
       await authStore.fetchUser()
     }
-    
-    console.log('ProtectedRoute authorization check:', {
-      token: !!authStore.token,
-      user: !!authStore.user,
-      isGuest: authStore.isGuest,
-      isAdmin: authStore.isAdmin,
-      isAuthorized: isAuthorized.value
-    })
   } catch (error) {
     console.error('ProtectedRoute error:', error)
   } finally {

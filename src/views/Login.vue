@@ -55,23 +55,23 @@ const handleOAuthLogin = (provider: 'google' | 'yandex') => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-cream flex items-center justify-center p-4">
+  <div class="min-h-screen bg-cream dark:bg-zinc-900 flex items-center justify-center p-4 font-sans transition-colors duration-300">
     <div class="w-full max-w-md">
       <!-- Logo/Header -->
       <div class="text-center mb-8">
         <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center shadow-xl shadow-orange-500/30 mx-auto mb-4">
           <span class="text-4xl">🐱</span>
         </div>
-        <h1 class="text-3xl font-bold text-kot-dark">Добро пожаловать</h1>
-        <p class="text-gray-500 mt-2">Войдите в свой аккаунт Koteyye Music</p>
+        <h1 class="text-3xl font-bold text-kot-dark dark:text-gray-100 transition-colors">Добро пожаловать</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-2 transition-colors">Войдите в свой аккаунт Koteyye Music</p>
       </div>
 
       <!-- Login Card -->
-      <div class="bg-white rounded-3xl shadow-xl p-8">
+      <div class="bg-white dark:bg-zinc-800 rounded-3xl shadow-xl p-8 transition-colors duration-300">
         <!-- Error Message -->
         <div
           v-if="error"
-          class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3 text-red-700"
+          class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-400 transition-colors"
         >
           <AlertCircle class="w-5 h-5 flex-shrink-0" />
           <span class="font-medium">{{ error }}</span>
@@ -81,30 +81,30 @@ const handleOAuthLogin = (provider: 'google' | 'yandex') => {
         <form @submit.prevent="handleLogin" class="space-y-5">
           <!-- Email Input -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Email</label>
             <div class="relative">
-              <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
               <input
                 v-model="email"
                 type="email"
                 placeholder="your@email.com"
                 :disabled="isSubmitting"
-                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:border-kot-orange dark:focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:cursor-not-allowed"
               />
             </div>
           </div>
 
           <!-- Password Input -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Пароль</label>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Пароль</label>
             <div class="relative">
-              <Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
               <input
                 v-model="password"
                 type="password"
                 placeholder="••••••••"
                 :disabled="isSubmitting"
-                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:border-kot-orange dark:focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:cursor-not-allowed"
               />
             </div>
           </div>
@@ -123,9 +123,9 @@ const handleOAuthLogin = (provider: 'google' | 'yandex') => {
 
         <!-- Divider -->
         <div class="my-6 flex items-center gap-4">
-          <div class="flex-1 h-px bg-gray-200"></div>
-          <span class="text-sm text-gray-400">или</span>
-          <div class="flex-1 h-px bg-gray-200"></div>
+          <div class="flex-1 h-px bg-gray-200 dark:bg-zinc-700 transition-colors"></div>
+          <span class="text-sm text-gray-400 dark:text-gray-500">или</span>
+          <div class="flex-1 h-px bg-gray-200 dark:bg-zinc-700 transition-colors"></div>
         </div>
 
         <!-- OAuth Buttons -->
@@ -135,7 +135,7 @@ const handleOAuthLogin = (provider: 'google' | 'yandex') => {
             @click="handleOAuthLogin('google')"
             type="button"
             :disabled="isSubmitting"
-            class="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-2xl hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full py-3 bg-white dark:bg-zinc-700 border-2 border-gray-200 dark:border-zinc-600 text-gray-700 dark:text-gray-200 font-semibold rounded-2xl hover:border-gray-300 dark:hover:border-zinc-500 hover:bg-gray-50 dark:hover:bg-zinc-600 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -151,7 +151,7 @@ const handleOAuthLogin = (provider: 'google' | 'yandex') => {
             @click="handleOAuthLogin('yandex')"
             type="button"
             :disabled="isSubmitting"
-            class="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-2xl hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full py-3 bg-white dark:bg-zinc-700 border-2 border-gray-200 dark:border-zinc-600 text-gray-700 dark:text-gray-200 font-semibold rounded-2xl hover:border-gray-300 dark:hover:border-zinc-500 hover:bg-gray-50 dark:hover:bg-zinc-600 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <img :src="YandexIcon" alt="Yandex" class="w-5 h-5" />
             Войти через Yandex
@@ -163,14 +163,14 @@ const handleOAuthLogin = (provider: 'google' | 'yandex') => {
           <button
             @click="router.push('/')"
             type="button"
-            class="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-2xl transition-colors mb-4"
+            class="w-full py-3 bg-gray-100 dark:bg-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-600 text-gray-700 dark:text-gray-200 font-semibold rounded-2xl transition-colors mb-4"
           >
             Остаться гостем
           </button>
         </div>
 
         <!-- Register Link -->
-        <p class="text-center text-gray-500">
+        <p class="text-center text-gray-500 dark:text-gray-400">
           Нет аккаунта?
           <router-link to="/register" class="text-kot-orange font-semibold hover:underline">
             Зарегистрироваться

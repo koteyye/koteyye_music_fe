@@ -17,8 +17,7 @@ import type {
   Album,
   AlbumDetailResponse,
 } from "../types";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+import { API_BASE_URL } from "../config";
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
@@ -35,14 +34,6 @@ apiClient.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
       // Debug logging for admin requests
-      if (config.url?.includes('/admin/')) {
-        console.log('Admin API request:', {
-          url: config.url,
-          method: config.method,
-          hasToken: !!token,
-          tokenPreview: token ? `${token.slice(0, 20)}...` : 'none'
-        });
-      }
     } else {
       console.warn('No auth token found for request:', config.url);
     }
@@ -151,6 +142,10 @@ export const tracksAPI = {
       return `${API_BASE_URL}/tracks/invalid/cover`;
     }
     return `${API_BASE_URL}/tracks/${trackId}/cover`;
+  },
+
+  getAlbumCoverUrl: (albumId: string): string => {
+    return `${API_BASE_URL}/albums/${albumId}/cover`;
   },
 
   // Проверка существования обложки

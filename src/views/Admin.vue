@@ -6,7 +6,6 @@ import { adminAPI } from "../api/client";
 import { GENRE_OPTIONS } from "../constants/genres";
 import { buildMediaUrl } from "../utils/media-urls";
 import FormSelect from "../components/FormSelect.vue";
-import TrackCover from "../components/TrackCover.vue";
 import {
     Upload,
     Trash2,
@@ -217,10 +216,10 @@ const submitRelease = async () => {
     error.value = null;
     
     let album: Album | null = null;
+    const uploadedTracks: Track[] = [];
     
     try {
         // 1. Create album
-        console.log('Creating album...');
         const albumFormData = new FormData();
         albumFormData.append('title', releaseForm.value.title.trim());
         albumFormData.append('artist', releaseForm.value.artist.trim());
@@ -230,12 +229,6 @@ const submitRelease = async () => {
         
         // Check token before starting
         const token = localStorage.getItem("auth_token") || localStorage.getItem("token");
-        console.log('Token available:', !!token);
-        console.log('Auth store state:', {
-            isAuthenticated: authStore.isAuthenticated,
-            isAdmin: authStore.isAdmin,
-            user: authStore.user
-        });
         
         if (!token) {
             error.value = "Токен авторизации отсутствует. Попробуйте перезайти.";
@@ -246,29 +239,16 @@ const submitRelease = async () => {
         try {
             await authStore.fetchUser();
         } catch (authError) {
-            console.warn('Failed to refresh user data:', authError);
+            // Silently fail auth refresh
         }
         
-        console.log('Album data:', {
-            title: releaseForm.value.title.trim(),
-            artist: releaseForm.value.artist.trim(),
-            genre: releaseForm.value.genre,
-            release_date: releaseForm.value.releaseDate,
-            cover_name: releaseForm.value.coverFile?.name,
-            cover_size: releaseForm.value.coverFile?.size,
-            cover_type: releaseForm.value.coverFile?.type
-        });
-        
         album = await adminAPI.createAlbum(albumFormData);
-        console.log('Album created:', album);
         
         // 2. Upload tracks sequentially
         const totalTracks = tracks.value.length;
         let uploadedCount = 0;
-        const uploadedTracks = [];
         
         for (const track of tracks.value) {
-            console.log(`Uploading track ${uploadedCount + 1}/${totalTracks}: ${track.title}`);
             
             // Check token is still available before each track upload
             const currentToken = localStorage.getItem("auth_token") || localStorage.getItem("token");
@@ -280,28 +260,17 @@ const submitRelease = async () => {
             trackFormData.append('title', track.title.trim());
             trackFormData.append('audio', track.audioFile!);
             
-            console.log('Track data:', {
-                title: track.title.trim(),
-                audio_name: track.audioFile?.name,
-                audio_size: track.audioFile?.size,
-                audio_type: track.audioFile?.type
-            });
-            
             // Try upload with retry on 401
             let uploadedTrack;
             try {
                 uploadedTrack = await adminAPI.uploadTrackToAlbum(album!.id, trackFormData);
             } catch (trackError: any) {
                 if (trackError.response?.status === 401) {
-                    console.log('Got 401 for track upload, trying to refresh auth and retry...');
-                    
                     // Try to refresh user data
                     try {
                         await authStore.fetchUser();
-                        console.log('Auth refreshed, retrying track upload...');
                         uploadedTrack = await adminAPI.uploadTrackToAlbum(album!.id, trackFormData);
                     } catch (retryError) {
-                        console.error('Retry failed:', retryError);
                         throw trackError; // Throw original error
                     }
                 } else {
@@ -312,12 +281,9 @@ const submitRelease = async () => {
             uploadedTracks.push(uploadedTrack);
             uploadedCount++;
             uploadProgress.value = Math.round((uploadedCount / totalTracks) * 100);
-            
-            console.log(`Track uploaded: ${uploadedTrack.title}`);
         }
         
         // 3. Success
-        console.log('Release created successfully!', { album, tracks: uploadedTracks });
         uploadSuccess.value = true;
         resetForm();
         await fetchMyAlbums();
@@ -327,11 +293,9 @@ const submitRelease = async () => {
         }, 3000);
         
     } catch (err: any) {
-        console.error("Failed to create release:", err);
         
         // Check if album was created successfully before the error
         if (album && album.id) {
-            console.log("Album was created successfully, error occurred during track upload");
             
             // Check if error is 401 - might be temporary auth issue
             if (err.response?.status === 401) {
@@ -349,7 +313,7 @@ const submitRelease = async () => {
                             }, 3000);
                         }
                     } catch (refreshError) {
-                        console.error("Failed to refresh albums list:", refreshError);
+                        // Ignore refresh error
                     }
                 }, 1000);
                 
@@ -384,12 +348,6 @@ const submitRelease = async () => {
                     error.value = err.message || "Ошибка при загрузке релиза";
             }
         }
-        
-        console.error("Detailed error:", {
-            status: err.response?.status,
-            data: err.response?.data,
-            message: err.message
-        });
     } finally {
         isUploading.value = false;
         uploadProgress.value = 0;
@@ -450,7 +408,6 @@ const makeAdmin = () => {
     if (authStore.user) {
         authStore.user.role = 'admin';
         localStorage.setItem('user', JSON.stringify(authStore.user));
-        console.log('Пользователь стал админом!');
     }
 };
 </script>
@@ -850,7 +807,7 @@ const makeAdmin = () => {
                                                 :src="track.cover_url"
                                                 :alt="track.title"
                                                 class="w-8 h-8 rounded-lg object-cover shadow-sm"
-                                                @error="(e) => { console.error('Failed to load cover:', track.cover_url, e); e.target.style.display = 'none' }"
+                                                @error="(e) => { (e.target as HTMLImageElement).style.display = 'none' }"
                                             />
                                             <span class="w-6 h-6 bg-white text-kot-orange rounded-full flex items-center justify-center text-xs font-bold">
                                                 {{ index + 1 }}

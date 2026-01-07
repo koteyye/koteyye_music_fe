@@ -69,7 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
             userProfile.value.player_state.volume
           );
         } catch (error) {
-          console.log('Player state restoration not available yet:', error);
+          // Player state restoration not available yet
         }
       }
       

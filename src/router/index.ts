@@ -6,12 +6,6 @@ import {
 
 // Views
 import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
-import AuthCallback from "../views/AuthCallback.vue";
-import Admin from "../views/Admin.vue";
-import Profile from "../views/Profile.vue";
-import AlbumDetail from "../views/AlbumDetail.vue";
 
 // Routes configuration
 const routes: RouteRecordRaw[] = [
@@ -28,32 +22,32 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "Login",
-    component: Login,
+    component: () => import("../views/Login.vue"),
   },
   {
     path: "/register",
     name: "Register",
-    component: Register,
+    component: () => import("../views/Register.vue"),
   },
   {
     path: "/auth-callback",
     name: "AuthCallback",
-    component: AuthCallback,
+    component: () => import("../views/AuthCallback.vue"),
   },
   {
     path: "/admin",
     name: "Admin",
-    component: Admin,
+    component: () => import("../views/Admin.vue"),
   },
   {
     path: "/profile",
     name: "Profile",
-    component: Profile,
+    component: () => import("../views/Profile.vue"),
   },
   {
     path: "/albums/:id",
     name: "AlbumDetail",
-    component: AlbumDetail,
+    component: () => import("../views/AlbumDetail.vue"),
   },
   {
     // 404 Not Found

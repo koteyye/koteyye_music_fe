@@ -1,45 +1,33 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+import { API_BASE_URL } from '../config';
 
-/**
- * Строит полный URL для медиа-ресурса
- * @param url - относительный URL от API (например: "/api/tracks/123/cover") или полный URL
- * @returns полный URL для использования в src атрибутах
- */
-export function buildMediaUrl(url: string | null | undefined): string | undefined {
-  if (!url || url.trim() === '') {
-    return undefined;
-  }
+export const buildMediaUrl = (url?: string): string => {
+  if (!url) return '';
   
-  console.log('buildMediaUrl called with:', url, 'API_BASE_URL:', API_BASE_URL);
-
-  // Если URL уже полный (содержит протокол), возвращаем как есть
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    console.log('buildMediaUrl: URL is already full, returning as is');
+  // URL starts with http - return as is
+  if (url.startsWith('http')) {
     return url;
   }
 
-  // Если URL начинается с /api/ - это уже полный путь от API
-  // Нужно заменить /api/ на базовый URL (который уже содержит /api)
+  // API_BASE_URL is guaranteed to end with /api now
+  const BASE_URL = API_BASE_URL.replace(/\/api$/, ''); // root domain
+  
+  // If url already starts with /api/, add domain only
   if (url.startsWith('/api/')) {
-    // Убираем /api/ из начала URL и добавляем к базовому URL
-    const pathWithoutApi = url.substring(4); // убираем '/api'
-    const result = `${API_BASE_URL}${pathWithoutApi}`;
-    console.log('buildMediaUrl: URL starts with /api/, result:', result);
-    return result;
+    return `${BASE_URL}${url}`;
   }
-
-  // Если URL начинается с /, добавляем base URL (который уже содержит /api)
+  
+  // If url starts with /, it's from root
   if (url.startsWith('/')) {
-    const result = `${API_BASE_URL}${url}`;
-    console.log('buildMediaUrl: URL starts with /, result:', result);
-    return result;
+    // Special handling for API routes that might be returned as root-relative
+    if (url.startsWith('/tracks/') || url.startsWith('/albums/')) {
+      return `${API_BASE_URL}${url}`;
+    }
+    return `${BASE_URL}${url}`;
   }
-
-  // Иначе считаем это относительным путем и добавляем /
-  const result = `${API_BASE_URL}/${url}`;
-  console.log('buildMediaUrl: relative URL, result:', result);
-  return result;
-}
+  
+  // Otherwise append to API_BASE_URL
+  return `${API_BASE_URL}/${url}`;
+};
 
 /**
  * Строит URL для обложки трека

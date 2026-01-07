@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { usePlayerStore } from "../stores/player";
 import { tracksAPI } from "../api/client";
@@ -103,12 +103,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-cream/90 backdrop-blur-sm p-4 md:p-8">
+    <div class="min-h-screen bg-cream/90 dark:bg-zinc-900 backdrop-blur-sm p-4 md:p-8 transition-colors duration-300">
         <div class="max-w-6xl mx-auto">
             <!-- Back Button -->
             <button
                 @click="goBack"
-                class="mb-6 flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-2xl transition-all shadow-sm hover:shadow-md"
+                class="mb-6 flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 rounded-2xl transition-all shadow-sm hover:shadow-md"
             >
                 <ArrowLeft class="w-5 h-5" />
                 На главную
@@ -127,49 +127,58 @@ onMounted(() => {
             <!-- Album Details -->
             <div v-else-if="albumDetail" class="space-y-8">
                 <!-- Album Header -->
-                <div class="bg-gradient-to-br from-kot-orange to-orange-600 rounded-3xl p-8 text-white">
-                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                <div class="relative overflow-hidden rounded-3xl p-6 md:p-10 text-white shadow-2xl bg-gradient-to-br from-orange-400 to-orange-500 dark:from-zinc-800 dark:to-zinc-900 transition-colors duration-300">
+                    <!-- Dark Mode Background: Blurred Cover -->
+                    <div class="absolute inset-0 hidden dark:block z-0">
+                        <img
+                            v-if="albumDetail.album.cover_url"
+                            :src="buildMediaUrl(albumDetail.album.cover_url)"
+                            class="w-full h-full object-cover blur-3xl opacity-40 scale-110"
+                        />
+                        <div class="absolute inset-0 bg-black/40"></div>
+                    </div>
+
+                    <div class="relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start">
                         <!-- Album Cover -->
                         <div class="flex-shrink-0">
-                            <div class="w-64 h-64 rounded-2xl overflow-hidden shadow-2xl">
+                            <div class="w-64 h-64 rounded-2xl overflow-hidden shadow-2xl bg-white/10">
                                 <img
                                     v-if="albumDetail.album.cover_url"
                                     :src="buildMediaUrl(albumDetail.album.cover_url)"
                                     :alt="albumDetail.album.title"
                                     class="w-full h-full object-cover"
                                 />
-                                <div v-else class="w-full h-full bg-white/20 flex items-center justify-center">
-                                    <Music class="w-16 h-16 text-white/50" />
+                                <div v-else class="w-full h-full flex items-center justify-center">
+                                    <Music class="w-20 h-20 text-white/50" />
                                 </div>
                             </div>
                         </div>
 
                         <!-- Album Info -->
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm text-white/80 mb-2">Альбом</p>
-                            <h1 class="text-4xl md:text-5xl font-bold mb-4 break-words">
+                        <div class="flex-1 min-w-0 text-center md:text-left">
+                            <p class="text-xs font-medium text-white/80 mb-2 uppercase tracking-wider">Альбом</p>
+                            <h1 class="text-2xl md:text-4xl font-semibold mb-3 break-words leading-tight">
                                 {{ albumDetail.album.title }}
                             </h1>
-                            <p class="text-xl text-white/90 mb-4">
+                            <p class="text-lg md:text-xl font-medium text-white/90 mb-5">
                                 {{ albumDetail.album.artist }}
                             </p>
                             
-                            <div class="flex flex-wrap items-center gap-4 text-sm text-white/80 mb-6">
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs md:text-sm text-white/80 mb-6">
                                 <!-- Genre -->
-                                <span v-if="albumDetail.album.genre" class="flex items-center gap-2">
-                                    <span class="w-2 h-2 bg-white/50 rounded-full"></span>
+                                <span v-if="albumDetail.album.genre" class="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">
                                     {{ getGenreDisplayName(albumDetail.album.genre) }}
                                 </span>
                                 
                                 <!-- Year -->
                                 <span v-if="albumDetail.album.year" class="flex items-center gap-2">
-                                    <span class="w-2 h-2 bg-white/50 rounded-full"></span>
+                                    <span class="w-1.5 h-1.5 bg-white/50 rounded-full"></span>
                                     {{ albumDetail.album.year }}
                                 </span>
                                 
                                 <!-- Track Count -->
                                 <span v-if="albumDetail.tracks" class="flex items-center gap-2">
-                                    <span class="w-2 h-2 bg-white/50 rounded-full"></span>
+                                    <span class="w-1.5 h-1.5 bg-white/50 rounded-full"></span>
                                     {{ albumDetail.tracks.length }} {{ albumDetail.tracks.length === 1 ? 'трек' : 'треков' }}
                                 </span>
                             </div>
@@ -178,9 +187,9 @@ onMounted(() => {
                             <button
                                 @click="playAlbum"
                                 :disabled="!albumDetail.tracks?.length"
-                                class="flex items-center gap-3 px-8 py-4 bg-white text-kot-orange font-semibold rounded-2xl hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-kot-orange font-bold rounded-full hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 text-sm md:text-base"
                             >
-                                <Play class="w-6 h-6 ml-0.5" />
+                                <Play class="w-4 h-4 ml-0.5 fill-current" />
                                 Слушать альбом
                             </button>
                         </div>
@@ -188,21 +197,21 @@ onMounted(() => {
                 </div>
 
                 <!-- Track List -->
-                <div v-if="albumDetail.tracks?.length" class="bg-white rounded-3xl shadow-xl p-6">
-                    <h2 class="text-2xl font-bold text-kot-dark mb-6">Список треков</h2>
+                <div v-if="albumDetail.tracks?.length" class="bg-white dark:bg-zinc-800 rounded-3xl shadow-xl p-6 transition-colors duration-300">
+                    <h2 class="text-2xl font-bold text-kot-dark dark:text-gray-100 mb-6">Список треков</h2>
                     
                     <div class="space-y-2">
                         <div
                             v-for="(track, index) in albumDetail.tracks"
                             :key="track.id"
-                            class="group flex items-center gap-3 p-3 md:p-4 rounded-2xl transition-all hover:bg-gray-50 cursor-pointer"
+                            class="group flex items-center gap-3 p-3 md:p-4 rounded-2xl transition-all hover:bg-gray-50 dark:hover:bg-zinc-700/50 cursor-pointer"
                             @click="playTrack(track)"
                         >
                             <!-- Track Number (только десктоп) -->
                             <div class="hidden md:block w-8 text-center flex-shrink-0">
                                 <span
                                     v-if="!isCurrentlyPlaying(track)"
-                                    class="text-gray-400 group-hover:hidden"
+                                    class="text-gray-400 dark:text-gray-500 group-hover:hidden"
                                 >
                                     {{ index + 1 }}
                                 </span>
@@ -234,24 +243,24 @@ onMounted(() => {
                             <!-- Track Info -->
                             <div class="flex-1 min-w-0">
                                 <h3
-                                    class="font-semibold text-kot-dark truncate transition-colors text-sm md:text-base"
+                                    class="font-medium text-kot-dark dark:text-gray-200 truncate transition-colors text-sm md:text-base"
                                     :class="{
-                                        'text-kot-orange': isCurrentlyPlaying(track),
+                                        'text-kot-orange dark:text-kot-orange': isCurrentlyPlaying(track),
                                     }"
                                 >
                                     {{ track.title }}
                                 </h3>
-                                <p class="text-xs md:text-sm text-gray-500 truncate">
+                                <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 truncate">
                                     {{ track.artist_name || track.artist }}
                                 </p>
                                 <!-- Длительность для мобильной версии -->
-                                <p class="text-xs text-gray-400 md:hidden">
+                                <p class="text-xs text-gray-400 dark:text-gray-500 md:hidden">
                                     {{ formatDuration(track.duration_seconds) }}
                                 </p>
                             </div>
 
                             <!-- Duration (только десктоп) -->
-                            <div class="hidden md:flex text-sm text-gray-400 flex-shrink-0 items-center gap-2">
+                            <div class="hidden md:flex text-sm text-gray-400 dark:text-gray-500 flex-shrink-0 items-center gap-2">
                                 <Clock class="w-4 h-4" />
                                 {{ formatDuration(track.duration_seconds) }}
                             </div>
@@ -261,8 +270,8 @@ onMounted(() => {
                                 @click.stop="toggleLike(track)"
                                 class="hidden md:flex items-center gap-2 px-3 py-2 rounded-full transition-colors flex-shrink-0"
                                 :class="{
-                                    'bg-orange-100 text-kot-orange': track.is_liked,
-                                    'bg-gray-100 text-gray-400 hover:bg-orange-50 hover:text-kot-orange': !track.is_liked,
+                                    'bg-orange-100 dark:bg-orange-900/40 text-kot-orange': track.is_liked,
+                                    'bg-gray-100 dark:bg-zinc-700 text-gray-400 dark:text-gray-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-kot-orange': !track.is_liked,
                                 }"
                             >
                                 <Cat
@@ -290,7 +299,7 @@ onMounted(() => {
 
                 <!-- Empty State -->
                 <div v-else class="text-center py-12">
-                    <p class="text-gray-500">В альбоме пока нет треков</p>
+                    <p class="text-gray-500 dark:text-gray-400">В альбоме пока нет треков</p>
                 </div>
             </div>
         </div>

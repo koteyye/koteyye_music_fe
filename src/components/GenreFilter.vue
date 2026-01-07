@@ -47,18 +47,18 @@ const closeDropdown = () => {
 
 <template>
     <div class="mb-6">
-        <h3 class="text-lg font-semibold text-kot-dark mb-3">Жанр</h3>
+        <h3 class="text-lg font-semibold text-kot-dark dark:text-gray-100 mb-3 transition-colors">Жанр</h3>
         <div class="relative w-full md:w-auto" style="min-width: 160px; max-width: 100%;">
             <button
                 @click="toggleDropdown"
                 @blur="closeDropdown"
-                class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-left flex items-center justify-between hover:border-kot-orange focus:border-kot-orange focus:ring-2 focus:ring-orange-100 transition-all whitespace-nowrap"
+                class="w-full px-4 py-3 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl text-left flex items-center justify-between hover:border-kot-orange focus:border-kot-orange focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/40 transition-all whitespace-nowrap"
                 style="min-width: 200px;"
                 :class="{
-                    'border-kot-orange ring-2 ring-orange-100': isOpen
+                    'border-kot-orange ring-2 ring-orange-100 dark:ring-orange-900/40': isOpen
                 }"
             >
-                <span class="text-gray-900">{{ selectedOption.label }}</span>
+                <span class="text-gray-900 dark:text-gray-100 transition-colors">{{ selectedOption.label }}</span>
                 <ChevronDown 
                     class="w-5 h-5 text-gray-400 transition-transform"
                     :class="{ 'rotate-180': isOpen }"
@@ -67,7 +67,7 @@ const closeDropdown = () => {
 
             <div
                 v-if="isOpen"
-                class="absolute top-full left-0 right-0 z-10 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto"
+                class="absolute top-full left-0 right-0 z-10 mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg max-h-60 overflow-y-auto"
                 @mousedown.prevent
             >
                 <button
@@ -75,10 +75,10 @@ const closeDropdown = () => {
                     :key="option.value"
                     @click="selectGenre(option.value)"
                     @mousedown.stop
-                    class="w-full px-4 py-3 text-left hover:bg-orange-50 hover:text-kot-orange transition-colors"
+                    class="w-full px-4 py-3 text-left hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-kot-orange transition-colors"
                     :class="{
-                        'bg-orange-50 text-kot-orange font-medium': option.value === selectedGenre,
-                        'text-gray-700': option.value !== selectedGenre
+                        'bg-orange-50 dark:bg-orange-900/20 text-kot-orange font-medium': option.value === selectedGenre,
+                        'text-gray-700 dark:text-gray-300': option.value !== selectedGenre
                     }"
                 >
                     {{ option.label }}

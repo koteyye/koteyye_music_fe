@@ -3,10 +3,12 @@ import { onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from './stores/auth';
 import { usePlayerStore } from './stores/player';
 import GlobalPlayer from './components/GlobalPlayer.vue';
+import { useTheme } from './composables/useTheme';
 
 
 const authStore = useAuthStore();
 const playerStore = usePlayerStore();
+const { isDark } = useTheme();
 
 onMounted(async () => {
   // Инициализируем состояние из localStorage
@@ -41,7 +43,7 @@ onUnmounted(() => {
 <template>
     <div 
         id="app" 
-        class="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-24"
+        class="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-24 bg-cream dark:bg-zinc-900 dark:text-gray-100 transition-colors duration-300"
 
     >
         <!-- Main router view -->

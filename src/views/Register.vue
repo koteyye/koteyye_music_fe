@@ -123,7 +123,7 @@ const strengthText = computed(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-cream flex items-center justify-center p-4">
+    <div class="min-h-screen bg-cream dark:bg-zinc-900 flex items-center justify-center p-4 transition-colors duration-300">
         <div class="w-full max-w-md">
             <!-- Logo/Header -->
             <div class="text-center mb-8">
@@ -132,18 +132,18 @@ const strengthText = computed(() => {
                 >
                     <span class="text-4xl">🐱</span>
                 </div>
-                <h1 class="text-3xl font-bold text-kot-dark">Регистрация</h1>
-                <p class="text-gray-500 mt-2">
+                <h1 class="text-3xl font-bold text-kot-dark dark:text-gray-100 transition-colors">Регистрация</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-2 transition-colors">
                     Создайте аккаунт в Koteyye Music
                 </p>
             </div>
 
             <!-- Register Card -->
-            <div class="bg-white rounded-3xl shadow-xl p-8">
+            <div class="bg-white dark:bg-zinc-800 rounded-3xl shadow-xl p-8 transition-colors duration-300">
                 <!-- Success Message -->
                 <div
                     v-if="success"
-                    class="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl flex items-center gap-3 text-green-700"
+                    class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl flex items-center gap-3 text-green-700 dark:text-green-400 transition-colors"
                 >
                     <CheckCircle class="w-5 h-5 flex-shrink-0" />
                     <span class="font-medium"
@@ -154,7 +154,7 @@ const strengthText = computed(() => {
                 <!-- Error Message -->
                 <div
                     v-if="error"
-                    class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3 text-red-700"
+                    class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-400 transition-colors"
                 >
                     <AlertCircle class="w-5 h-5 flex-shrink-0" />
                     <span class="font-medium">{{ error }}</span>
@@ -165,19 +165,19 @@ const strengthText = computed(() => {
                     <!-- Email Input -->
                     <div>
                         <label
-                            class="block text-sm font-semibold text-gray-700 mb-2"
+                            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors"
                             >Email *</label
                         >
                         <div class="relative">
                             <Mail
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
                             />
                             <input
                                 v-model="email"
                                 type="email"
                                 placeholder="your@email.com"
                                 :disabled="isSubmitting || success"
-                                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:border-kot-orange dark:focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
@@ -185,19 +185,19 @@ const strengthText = computed(() => {
                     <!-- Password Input -->
                     <div>
                         <label
-                            class="block text-sm font-semibold text-gray-700 mb-2"
+                            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors"
                             >Пароль *</label
                         >
                         <div class="relative">
                             <Lock
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
                             />
                             <input
                                 v-model="password"
                                 type="password"
                                 placeholder="••••••••"
                                 :disabled="isSubmitting || success"
-                                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:border-kot-orange dark:focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:cursor-not-allowed"
                             />
                         </div>
 
@@ -211,11 +211,11 @@ const strengthText = computed(() => {
                                     :class="
                                         i <= passwordStrength
                                             ? strengthColor
-                                            : 'bg-gray-200'
+                                            : 'bg-gray-200 dark:bg-zinc-700'
                                     "
                                 ></div>
                             </div>
-                            <p class="text-xs mt-1 text-gray-500">
+                            <p class="text-xs mt-1 text-gray-500 dark:text-gray-400">
                                 Сложность: {{ strengthText }}
                             </p>
                         </div>
@@ -224,19 +224,19 @@ const strengthText = computed(() => {
                     <!-- Confirm Password Input -->
                     <div>
                         <label
-                            class="block text-sm font-semibold text-gray-700 mb-2"
+                            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 transition-colors"
                             >Подтвердите пароль *</label
                         >
                         <div class="relative">
                             <User
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
                             />
                             <input
                                 v-model="confirmPassword"
                                 type="password"
                                 placeholder="••••••••"
                                 :disabled="isSubmitting || success"
-                                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                class="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:border-kot-orange dark:focus:border-kot-orange focus:outline-none transition-colors disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:cursor-not-allowed"
                             />
                         </div>
                         <!-- Password match indicator -->
@@ -277,9 +277,9 @@ const strengthText = computed(() => {
 
                 <!-- Divider -->
                 <div class="my-6 flex items-center gap-4">
-                    <div class="flex-1 h-px bg-gray-200"></div>
-                    <span class="text-sm text-gray-400">или</span>
-                    <div class="flex-1 h-px bg-gray-200"></div>
+                    <div class="flex-1 h-px bg-gray-200 dark:bg-zinc-700 transition-colors"></div>
+                    <span class="text-sm text-gray-400 dark:text-gray-500">или</span>
+                    <div class="flex-1 h-px bg-gray-200 dark:bg-zinc-700 transition-colors"></div>
                 </div>
 
                 <!-- OAuth Buttons -->
@@ -289,7 +289,7 @@ const strengthText = computed(() => {
                         @click="handleOAuthLogin('google')"
                         type="button"
                         :disabled="isSubmitting || success"
-                        class="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-2xl hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full py-3 bg-white dark:bg-zinc-700 border-2 border-gray-200 dark:border-zinc-600 text-gray-700 dark:text-gray-200 font-semibold rounded-2xl hover:border-gray-300 dark:hover:border-zinc-500 hover:bg-gray-50 dark:hover:bg-zinc-600 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <svg class="w-5 h-5" viewBox="0 0 24 24">
                             <path
@@ -317,7 +317,7 @@ const strengthText = computed(() => {
                         @click="handleOAuthLogin('yandex')"
                         type="button"
                         :disabled="isSubmitting || success"
-                        class="w-full py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-2xl hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="w-full py-3 bg-white dark:bg-zinc-700 border-2 border-gray-200 dark:border-zinc-600 text-gray-700 dark:text-gray-200 font-semibold rounded-2xl hover:border-gray-300 dark:hover:border-zinc-500 hover:bg-gray-50 dark:hover:bg-zinc-600 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <img :src="YandexIcon" alt="Yandex" class="w-5 h-5" />
                         Войти через Yandex
@@ -325,7 +325,7 @@ const strengthText = computed(() => {
                 </div>
 
                 <!-- Login Link -->
-                <p class="text-center mt-6 text-gray-500">
+                <p class="text-center mt-6 text-gray-500 dark:text-gray-400">
                     Уже есть аккаунт?
                     <router-link
                         to="/login"
