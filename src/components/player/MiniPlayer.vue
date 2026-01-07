@@ -1,12 +1,14 @@
 <template>
   <div 
     class="absolute bottom-0 left-0 right-0 h-20 bg-white/90 dark:bg-zinc-900/95 backdrop-blur-lg border-t border-gray-200 dark:border-zinc-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40 pointer-events-auto pb-[env(safe-area-inset-bottom)] transition-colors duration-300"
-    @click="playerStore.toggleExpand"
-    @touchstart="handleTouchStart"
-    @touchmove="handleTouchMove" 
-    @touchend="handleTouchEnd"
-    @touchcancel="handleTouchCancel"
   >
+    <!-- Desktop Click Hint (Always visible & blinking on desktop) -->
+    <div class="hidden md:flex absolute top-2 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+        <span class="text-[10px] text-gray-400 dark:text-gray-500 animate-pulse font-medium tracking-wide">
+            Нажмите, чтобы развернуть плеер
+        </span>
+    </div>
+
     <!-- Swipe Indicator (только на мобильных) -->
     <div class="absolute top-2 left-1/2 transform -translate-x-1/2 md:hidden">
       <div class="w-8 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
@@ -107,7 +109,6 @@ const playerStore = usePlayerStore()
 
 const currentTrack = computed(() => playerStore.currentTrack)
 const isPlaying = computed(() => playerStore.isPlaying)
-const isExpanded = computed(() => playerStore.isExpanded)
 const progressPercent = computed(() => playerStore.progressPercent)
 const volume = computed(() => playerStore.volume)
 
@@ -166,46 +167,6 @@ const toggleLike = async () => {
         playerStore.updateCurrentTrack(revertedTrack);
     }
 };
-
-// Swipe functionality
-const swipeState = ref({
-  startY: 0,
-  startTime: 0,
-  isDragging: false
-})
-
-const handleTouchStart = (e: TouchEvent) => {
-  if (isExpanded.value) return
-  const touch = e.touches[0]
-  swipeState.value = {
-    startY: touch.clientY,
-    startTime: Date.now(),
-    isDragging: true
-  }
-}
-
-const handleTouchMove = (e: TouchEvent) => {
-  if (!swipeState.value.isDragging || isExpanded.value) return
-  
-  const touch = e.touches[0]
-  const deltaY = swipeState.value.startY - touch.clientY
-  const deltaX = Math.abs(touch.clientX - (e.target as HTMLElement).getBoundingClientRect().left)
-  const deltaTime = Date.now() - swipeState.value.startTime
-  
-  if (deltaY > 40 && deltaTime < 500 && Math.abs(deltaX) < 50) {
-    e.preventDefault()
-    swipeState.value.isDragging = false
-    playerStore.toggleExpand()
-  }
-}
-
-const handleTouchEnd = () => {
-  swipeState.value.isDragging = false
-}
-
-const handleTouchCancel = () => {
-  swipeState.value.isDragging = false
-}
 </script>
 
 <style scoped>

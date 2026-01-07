@@ -1,9 +1,6 @@
 <template>
   <div 
     class="fixed inset-0 z-50 bg-black text-white overflow-hidden flex flex-col"
-    @touchstart="handleFullPlayerTouchStart"
-    @touchmove="handleFullPlayerTouchMove"
-    @touchend="handleFullPlayerTouchEnd"
   >
     <!-- Background Layer (Atmosphere) -->
     <div class="absolute inset-0 z-0">
@@ -204,18 +201,6 @@ const trackCover = computed(() => {
   return '/default-cover.jpg';
 });
 
-const trackYear = computed(() => {
-    const track = currentTrack.value;
-    if (!track) return '';
-    const dateString = track.release_date || track.created_at;
-    if (!dateString) return '';
-    try {
-        return new Date(dateString).getFullYear().toString();
-    } catch {
-        return '';
-    }
-});
-
 const toggleLike = async () => {
     if (!currentTrack.value) return;
     
@@ -271,39 +256,6 @@ const onProgressClick = (event: MouseEvent) => {
   const rect = target.getBoundingClientRect()
   const percent = ((event.clientX - rect.left) / rect.width) * 100
   playerStore.seekByPercent(percent)
-}
-
-const fullPlayerSwipeState = ref({
-  startY: 0,
-  startTime: 0,
-  isDragging: false
-})
-
-const handleFullPlayerTouchStart = (e: TouchEvent) => {
-  if (!isExpanded.value) return
-  const touch = e.touches[0]
-  fullPlayerSwipeState.value = {
-    startY: touch.clientY,
-    startTime: Date.now(),
-    isDragging: true
-  }
-}
-
-const handleFullPlayerTouchMove = (e: TouchEvent) => {
-  if (!fullPlayerSwipeState.value.isDragging || !isExpanded.value) return
-  const touch = e.touches[0]
-  const deltaY = touch.clientY - fullPlayerSwipeState.value.startY
-  const deltaTime = Date.now() - fullPlayerSwipeState.value.startTime
-  
-  if (deltaY > 80 && deltaTime < 600) {
-    e.preventDefault()
-    fullPlayerSwipeState.value.isDragging = false
-    playerStore.toggleExpand()
-  }
-}
-
-const handleFullPlayerTouchEnd = () => {
-  fullPlayerSwipeState.value.isDragging = false
 }
 </script>
 
