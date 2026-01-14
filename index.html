@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
+    <script>
+      // Global error handler to catch issues before Vue loads
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e.message, e.filename, e.lineno);
+        // Only show critical errors if body is empty (app didn't load)
+        if (document.body && document.getElementById('app') && document.getElementById('app').innerHTML.trim() === '') {
+           document.body.innerHTML += '<div style="color:red; padding:20px; z-index:9999; position:fixed; top:0; left:0; background:white; border:2px solid red;">Critical Error: ' + e.message + '</div>';
+        }
+      });
+    </script>
     <meta charset="UTF-8">
-    <link rel="icon" href="public/favicon.ico">
+    <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Koteyye Music</title>
     <meta name="description" content="Котей Мьюзик - уютный музыкальный стриминговый сервис">
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #2C2C2C; color: #E5E7EB; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="text-align: center;">
+          <div style="width: 48px; height: 48px; border: 3px solid #FF6600; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
+          <h2 style="font-size: 1.25rem; font-weight: 500; margin: 0;">Загрузка...</h2>
+          <style>
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+          </style>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
